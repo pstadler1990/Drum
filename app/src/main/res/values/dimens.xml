@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="app_main_topbar_elevation">4dp</dimen>
+    <dimen name="app_main_topbar_padding">16dp</dimen>
+    <dimen name="track_button_width">30dp</dimen>
+    <dimen name="track_button_height">30dp</dimen>
+</resources>
