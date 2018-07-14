@@ -3,19 +3,13 @@ package de.pstadler.drum;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.SparseArray;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener
@@ -52,14 +46,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Create first page
         barFragments = new ArrayList<>();
-        createNewPage();
+
+        if(savedInstanceState != null)
+        {
+            int oldPages = savedInstanceState.getInt("pages");
+            for(int i=0; i<oldPages; i++)
+            {
+                createNewPage();
+            }
+        }
+        else
+            createNewPage();
     }
 
-    protected void createNewPage()
+    private void createNewPage()
     {
         barFragments.add(new BarFragment());
         pages++;
         pagerAdapter.notifyDataSetChanged();
+        //TODO: createNewTrack() if fragment is attached (call n times, where n is the number of currently used tracks!)
+    }
+
+    private void createNewTrack()
+    {
+        BarFragment barFragment = barFragments.get(viewPager.getCurrentItem());
+
+        if(barFragment != null)
+        {
+            barFragment.onAddTrackListener(1); //TODO: Add real track number
+        }
     }
 
     @Override
@@ -72,17 +87,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        outState.putInt("pages", pages);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onClick(View v)
     {
         switch(v.getId())
         {
             case R.id.button_add_track:
-                BarFragment barFragment = barFragments.get(viewPager.getCurrentItem());
-
-                if(barFragment != null)
-                {
-                    barFragment.onAddTrackListener(1); //TODO: Add real track number
-                }
+                createNewTrack();
                 break;
             case R.id.button_add_page:
                 createNewPage();
@@ -90,6 +107,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+
+    /*Adapter for the pages (= bars); each page represents a single bar of the whole song*/
     private class ScreenSlidePageAdapter extends FragmentStatePagerAdapter
     {
         public ScreenSlidePageAdapter(FragmentManager fm)
@@ -108,19 +127,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         {
             return pages;
         }
-    }
-
-    @Override
-    protected void onPause()
-    {
-        Log.v(TAG, "Main activity is paused!!");
-        super.onPause();
-    }
-
-    @Override
-    protected void onDestroy()
-    {
-        Log.v(TAG, "Main activity is destroyed!!");
-        super.onDestroy();
     }
 }
