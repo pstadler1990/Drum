@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.BrokenBarrierException;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener
@@ -72,9 +74,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             pagerAdapter.notifyDataSetChanged();
         }
 
-        /*Create the same amount of tracks on the new page as well*/
-        viewPager.setCurrentItem(pages);
-        createNewTrack(tracks);
+        if(pages > 1)
+        {
+            viewPager.setCurrentItem(pages);
+            cloneTrackInformation(pages - 1);
+        }
     }
 
     public int createNewTrack(int trackCount, int...position)
@@ -86,21 +90,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         {
             for (int i = 0; i < trackCount; i++)
             {
-                //if (tracks + (trackCount - i) <= TRACKS_MAX)
-                //{
-                int tmpId;
-                if (instrumentId > Instrument.INSTRUMENT_MIN && instrumentId <= Instrument.INSTRUMENT_MAX)
-                    tmpId = instrumentId++;
-                else
-                    tmpId = Instrument.INSTRUMENT_DEFAULT;
-
-                barFragment.onAddTrackListener(tracks, tmpId);
-                tracksCreated++;
-                //}
-                //else
-                //{
-                //    break;
-                //}
+                int curTracks = barFragment.getTrackCount();
+                if (curTracks + (trackCount - i) <= TRACKS_MAX)
+                {
+                    barFragment.onAddTrackListener(curTracks, Instrument.INSTRUMENT_DEFAULT);
+                    tracksCreated++;
+                }
             }
         }
         return tracksCreated;
@@ -111,16 +106,49 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int tracksCreated = 0;
         int n = (trackCount.length > 0) ? trackCount[0] : 1;
 
+        int backupCurrentPage = viewPager.getCurrentItem();
+
         for(int i=0; i<pagerAdapter.getCount(); i++)
         {
-            BarFragment bf = barFragments.get(i);
-
-            if(bf.getTrackCount() <= tracks)
+            viewPager.setCurrentItem(i);
+            if(viewPager.getCurrentItem() == i)
             {
-                tracksCreated = createNewTrack(n, i);
+                BarFragment bf = barFragments.get(i);
+                int curTracks = bf.getTrackCount();
+
+                if (curTracks <= (curTracks + n))
+                {
+                    tracksCreated = createNewTrack(n, i);
+                }
             }
         }
         tracks += tracksCreated;
+
+        viewPager.setCurrentItem(backupCurrentPage);
+    }
+
+    private void cloneTrackInformation(int destPage)
+    {
+        if(destPage < 0 || destPage > pagerAdapter.getCount()) return;
+
+        /*Ensure to fetch an attached fragment to clone from*/
+        int currentPage = viewPager.getCurrentItem();
+        int srcPage = (destPage == currentPage)? (destPage - 1) : currentPage;
+
+        BarFragment src = (BarFragment)pagerAdapter.getItem(srcPage);
+        BarFragment dst = (BarFragment)pagerAdapter.getItem(destPage);
+
+        if(src == null || dst == null) return;
+
+        List<Fragment> srcTracks = src.getTracks();
+        for(Fragment f : srcTracks)
+        {
+            TrackFragment tf = (TrackFragment)f;
+            String instrumentName = tf.getInstrumentText();
+            int instrumentId = tf.getInstrumentId();
+            int trackId = tf.getTrackId();
+            dst.createNewTrack(trackId, instrumentId, instrumentName);
+        }
     }
 
     @Override

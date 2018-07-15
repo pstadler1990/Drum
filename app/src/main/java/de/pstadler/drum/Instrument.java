@@ -16,7 +16,7 @@ public abstract class Instrument
     public static final int INSTRUMENT_CYMBAL = 8;
 
     private static String[] instruments = new String[] {
-            "",
+            "empty",
             "Kick",
             "Snare",
             "Tom",

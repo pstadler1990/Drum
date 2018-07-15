@@ -22,6 +22,7 @@ public class TrackFragment extends Fragment implements View.OnClickListener
     private ArrayList<Button> buttons;
     private int instrumentId;
     private int trackId;
+    private String instrumentName;
 
     public TrackFragment() { }
 
@@ -35,12 +36,14 @@ public class TrackFragment extends Fragment implements View.OnClickListener
         {
             instrumentId = bundle.getInt("instrumentId");
             trackId = bundle.getInt("trackId");
+            instrumentName = bundle.getString("instrumentName", Instrument.getInstrumentName(Instrument.INSTRUMENT_DEFAULT));
         }
         else
         {
             /*Default instrument*/
-            instrumentId = Instrument.INSTRUMENT_KICK;
+            instrumentId = Instrument.INSTRUMENT_DEFAULT;
             trackId = -1;
+            instrumentName = Instrument.getInstrumentName(Instrument.INSTRUMENT_DEFAULT);
         }
     }
 
@@ -53,9 +56,6 @@ public class TrackFragment extends Fragment implements View.OnClickListener
         buttonContainer = rootView.findViewById(R.id.track_button_container);
         instrumentTextView = rootView.findViewById(R.id.instrument_name);
 
-        String instrumentName = Instrument.getInstrumentName(instrumentId);
-        if(instrumentName == "")
-            instrumentName = "N_" + String.valueOf(trackId);
         setInstrumentText(instrumentName);
 
         buttons = new ArrayList<>();
@@ -105,5 +105,20 @@ public class TrackFragment extends Fragment implements View.OnClickListener
     public void setInstrumentText(String text)
     {
         instrumentTextView.setText(text);
+    }
+
+    public String getInstrumentText()
+    {
+        return instrumentTextView.getText().toString();
+    }
+
+    public int getInstrumentId()
+    {
+        return instrumentId;
+    }
+
+    public int getTrackId()
+    {
+        return trackId;
     }
 }

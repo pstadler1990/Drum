@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.List;
+
 
 public class BarFragment extends Fragment implements ITrackListener
 {
@@ -39,7 +41,7 @@ public class BarFragment extends Fragment implements ITrackListener
         return rootView;
     }
 
-    public boolean createNewTrack(int trackId, int instrumentId)
+    public boolean createNewTrack(int trackId, int instrumentId, String...instrumentName)
     {
         android.support.v4.app.FragmentManager fragmentManager = getChildFragmentManager();
         if(fragmentManager != null)
@@ -49,6 +51,8 @@ public class BarFragment extends Fragment implements ITrackListener
             Bundle bundle = new Bundle();
             bundle.putInt("trackId", trackId);
             bundle.putInt("instrumentId", instrumentId);
+            if(instrumentName.length > 0)
+                bundle.putString("instrumentName", instrumentName[0]);
             trackFragment.setArguments(bundle);
 
             fragmentManager.beginTransaction().add(trackContainer.getId(), trackFragment).commit();
@@ -61,6 +65,12 @@ public class BarFragment extends Fragment implements ITrackListener
     public int getTrackCount()
     {
         return trackCount;
+    }
+
+    public List<Fragment> getTracks()
+    {
+        android.support.v4.app.FragmentManager fragmentManager = getChildFragmentManager();
+        return fragmentManager.getFragments();
     }
 
     @Override
