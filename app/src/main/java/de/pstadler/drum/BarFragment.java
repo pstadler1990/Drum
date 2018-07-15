@@ -1,6 +1,7 @@
 package de.pstadler.drum;
 
 
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 public class BarFragment extends Fragment implements ITrackListener
 {
     private static int barCounter = 0;
+    private int trackCount = 0;
     private int barId;
     private LinearLayout trackContainer;
 
@@ -28,8 +30,7 @@ public class BarFragment extends Fragment implements ITrackListener
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View rootView = inflater.inflate(R.layout.fragment_bar, container, false);
 
@@ -38,21 +39,33 @@ public class BarFragment extends Fragment implements ITrackListener
         return rootView;
     }
 
-    public boolean createNewTrack()
+    public boolean createNewTrack(int trackId, int instrumentId)
     {
         android.support.v4.app.FragmentManager fragmentManager = getChildFragmentManager();
         if(fragmentManager != null)
         {
             TrackFragment trackFragment = new TrackFragment();
+
+            Bundle bundle = new Bundle();
+            bundle.putInt("trackId", trackId);
+            bundle.putInt("instrumentId", instrumentId);
+            trackFragment.setArguments(bundle);
+
             fragmentManager.beginTransaction().add(trackContainer.getId(), trackFragment).commit();
+            trackCount++;
             return true;
         }
         return false;
     }
 
-    @Override
-    public void onAddTrackListener(int trackId)
+    public int getTrackCount()
     {
-        createNewTrack();
+        return trackCount;
+    }
+
+    @Override
+    public void onAddTrackListener(int trackId, int instrumentId)
+    {
+        createNewTrack(trackId, instrumentId);
     }
 }

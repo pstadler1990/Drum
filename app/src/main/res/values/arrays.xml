@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="instruments_default">
+        <item>Kick</item>
+        <item>Snare</item>
+        <item>Tom</item>
+        <item>Clap</item>
+        <item>Cowbell</item>
+        <item>Closed HH</item>
+        <item>Cymbal</item>
+    </array>
+
+</resources>

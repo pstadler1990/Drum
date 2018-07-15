@@ -2,13 +2,15 @@ package de.pstadler.drum;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 
 
@@ -16,10 +18,30 @@ public class TrackFragment extends Fragment implements View.OnClickListener
 {
     public static final String TAG = "TRACK";
     private LinearLayout buttonContainer;
+    private TextView instrumentTextView;
     private ArrayList<Button> buttons;
+    private int instrumentId;
+    private int trackId;
 
-    public TrackFragment()
+    public TrackFragment() { }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState)
     {
+        super.onCreate(savedInstanceState);
+
+        Bundle bundle = getArguments();
+        if(bundle != null)
+        {
+            instrumentId = bundle.getInt("instrumentId");
+            trackId = bundle.getInt("trackId");
+        }
+        else
+        {
+            /*Default instrument*/
+            instrumentId = Instrument.INSTRUMENT_KICK;
+            trackId = -1;
+        }
     }
 
     @Override
@@ -29,6 +51,12 @@ public class TrackFragment extends Fragment implements View.OnClickListener
         View rootView = inflater.inflate(R.layout.fragment_track, container, false);
 
         buttonContainer = rootView.findViewById(R.id.track_button_container);
+        instrumentTextView = rootView.findViewById(R.id.instrument_name);
+
+        String instrumentName = Instrument.getInstrumentName(instrumentId);
+        if(instrumentName == "")
+            instrumentName = "N_" + String.valueOf(trackId);
+        setInstrumentText(instrumentName);
 
         buttons = new ArrayList<>();
 
@@ -69,9 +97,13 @@ public class TrackFragment extends Fragment implements View.OnClickListener
             {
                 boolean newState = !button.isActivated();
                 button.setActivated(newState);
-                Log.v(TAG, "Pressed: " + button.getId());
                 break;
             }
         }
+    }
+
+    public void setInstrumentText(String text)
+    {
+        instrumentTextView.setText(text);
     }
 }

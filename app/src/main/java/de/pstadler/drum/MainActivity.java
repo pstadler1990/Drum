@@ -23,6 +23,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button buttonAddPage;
     protected ArrayList<BarFragment> barFragments;
 
+    private int tracks = 0;
+    private int instrumentId = 1;
+    public static final int TRACKS_MAX = 15;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -50,31 +55,72 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(savedInstanceState != null)
         {
             int oldPages = savedInstanceState.getInt("pages");
-            for(int i=0; i<oldPages; i++)
-            {
-                createNewPage();
-            }
+            createNewPage(oldPages);
         }
         else
             createNewPage();
     }
 
-    private void createNewPage()
+    private void createNewPage(int...pageNumber)
     {
-        barFragments.add(new BarFragment());
-        pages++;
-        pagerAdapter.notifyDataSetChanged();
-        //TODO: createNewTrack() if fragment is attached (call n times, where n is the number of currently used tracks!)
+        int n = (pageNumber.length > 0)? pageNumber[0] : 1;
+
+        for(int i=0; i<n; i++)
+        {
+            barFragments.add(new BarFragment());
+            pages++;
+            pagerAdapter.notifyDataSetChanged();
+        }
+
+        /*Create the same amount of tracks on the new page as well*/
+        viewPager.setCurrentItem(pages);
+        createNewTrack(tracks);
     }
 
-    private void createNewTrack()
+    public int createNewTrack(int trackCount, int...position)
     {
-        BarFragment barFragment = barFragments.get(viewPager.getCurrentItem());
+        int tracksCreated = 0;
+        BarFragment barFragment = (position.length > 0)? barFragments.get(position[0]) : barFragments.get(viewPager.getCurrentItem());
 
         if(barFragment != null)
         {
-            barFragment.onAddTrackListener(1); //TODO: Add real track number
+            for (int i = 0; i < trackCount; i++)
+            {
+                //if (tracks + (trackCount - i) <= TRACKS_MAX)
+                //{
+                int tmpId;
+                if (instrumentId > Instrument.INSTRUMENT_MIN && instrumentId <= Instrument.INSTRUMENT_MAX)
+                    tmpId = instrumentId++;
+                else
+                    tmpId = Instrument.INSTRUMENT_DEFAULT;
+
+                barFragment.onAddTrackListener(tracks, tmpId);
+                tracksCreated++;
+                //}
+                //else
+                //{
+                //    break;
+                //}
+            }
         }
+        return tracksCreated;
+    }
+
+    public void createNewTrackSynchronized(int...trackCount)
+    {
+        int tracksCreated = 0;
+        int n = (trackCount.length > 0) ? trackCount[0] : 1;
+
+        for(int i=0; i<pagerAdapter.getCount(); i++)
+        {
+            BarFragment bf = barFragments.get(i);
+
+            if(bf.getTrackCount() <= tracks)
+            {
+                tracksCreated = createNewTrack(n, i);
+            }
+        }
+        tracks += tracksCreated;
     }
 
     @Override
@@ -99,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch(v.getId())
         {
             case R.id.button_add_track:
-                createNewTrack();
+                createNewTrackSynchronized();
                 break;
             case R.id.button_add_page:
                 createNewPage();
