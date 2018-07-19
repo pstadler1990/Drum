@@ -1,17 +1,18 @@
 package de.pstadler.drum;
 
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.BrokenBarrierException;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener
@@ -26,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected ArrayList<BarFragment> barFragments;
 
     private int tracks = 0;
-    private int instrumentId = 1;
     public static final int TRACKS_MAX = 15;
 
 
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public int createNewTrack(int trackCount, int...position)
+    private int createNewTrack(int trackCount, int...position)
     {
         int tracksCreated = 0;
         BarFragment barFragment = (position.length > 0)? barFragments.get(position[0]) : barFragments.get(viewPager.getCurrentItem());
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return tracksCreated;
     }
 
-    public void createNewTrackSynchronized(int...trackCount)
+    private void createNewTrackSynchronized(int...trackCount)
     {
         int tracksCreated = 0;
         int n = (trackCount.length > 0) ? trackCount[0] : 1;

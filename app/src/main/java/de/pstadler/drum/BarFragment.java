@@ -1,20 +1,19 @@
 package de.pstadler.drum;
 
 
-import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-
 import java.util.List;
 
 
 public class BarFragment extends Fragment implements ITrackListener
 {
+    public static String TAG = "BarFragment";
     private static int barCounter = 0;
     private int trackCount = 0;
     private int barId;
@@ -29,6 +28,12 @@ public class BarFragment extends Fragment implements ITrackListener
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        /*Restore button states for all tracks in this bar*/
+        if(savedInstanceState != null)
+        {
+            restoreTrackInformation(savedInstanceState);
+        }
     }
 
     @Override
@@ -77,5 +82,35 @@ public class BarFragment extends Fragment implements ITrackListener
     public void onAddTrackListener(int trackId, int instrumentId)
     {
         createNewTrack(trackId, instrumentId);
+    }
+
+    private void restoreTrackInformation(Bundle bundle)
+    {
+        List<Fragment> tracks = getTracks();
+        for(int i=0; i < getTracks().size(); i++)
+        {
+            TrackFragment tf = (TrackFragment) tracks.get(i);
+            String key = String.format("buttonStates_%d", i);
+            boolean[] savedStates = bundle.getBooleanArray(key);
+            tf.setButtonStates(savedStates);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState)
+    {
+        List<Fragment> tracks = getTracks();
+
+        int i = 0;
+        for(Fragment f : tracks)
+        {
+            TrackFragment tf = (TrackFragment)f;
+            boolean[] buttonStates = tf.getButtonStates();
+            String bId = String.format("buttonStates_%d", i);
+            outState.putBooleanArray(bId, buttonStates);
+            i++;
+        }
+
+        super.onSaveInstanceState(outState);
     }
 }
