@@ -68,30 +68,14 @@ public class TrackFragment extends Fragment implements View.OnClickListener
 
         setInstrumentText(instrumentName);
 
-        Button b1 = rootView.findViewById(R.id.button_1);
-        b1.setOnClickListener(this);
-        buttons.add(b1);
-        Button b2 = rootView.findViewById(R.id.button_2);
-        b2.setOnClickListener(this);
-        buttons.add(b2);
-        Button b3 = rootView.findViewById(R.id.button_3);
-        b3.setOnClickListener(this);
-        buttons.add(b3);
-        Button b4 = rootView.findViewById(R.id.button_4);
-        b4.setOnClickListener(this);
-        buttons.add(b4);
-        Button b5 = rootView.findViewById(R.id.button_5);
-        b5.setOnClickListener(this);
-        buttons.add(b5);
-        Button b6 = rootView.findViewById(R.id.button_6);
-        b6.setOnClickListener(this);
-        buttons.add(b6);
-        Button b7 = rootView.findViewById(R.id.button_7);
-        b7.setOnClickListener(this);
-        buttons.add(b7);
-        Button b8 = rootView.findViewById(R.id.button_8);
-        b8.setOnClickListener(this);
-        buttons.add(b8);
+        for(int i=1; i<=NUMBER_OF_BUTTONS; i++)
+        {
+            String buttonId = String.format("button_%d", i);
+            int resID = getResources().getIdentifier(buttonId, "id", getContext().getPackageName());
+            Button b = rootView.findViewById(resID);
+            b.setOnClickListener(this);
+            buttons.add(b);
+        }
 
         updateButtonStates();
 
