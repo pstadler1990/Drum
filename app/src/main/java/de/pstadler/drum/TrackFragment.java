@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,7 @@ public class TrackFragment extends Fragment implements View.OnClickListener
     private int instrumentId;
     private int trackId;
     private String instrumentName;
-    private boolean[] buttonStates= new boolean[NUMBER_OF_BUTTONS];
+    private boolean[] buttonStates;
 
     public TrackFragment() { }
 
@@ -34,11 +35,15 @@ public class TrackFragment extends Fragment implements View.OnClickListener
     {
         super.onCreate(savedInstanceState);
 
+        buttonStates = new boolean[NUMBER_OF_BUTTONS];
+
         if(savedInstanceState != null)
         {
-            buttonStates = savedInstanceState.getBooleanArray("buttonStates");
+            boolean[] tmpStates = savedInstanceState.getBooleanArray("buttonStates");
+            buttonStates = (tmpStates == null)? buttonStates : tmpStates;
             trackId = savedInstanceState.getInt("trackId");
             instrumentId = savedInstanceState.getInt("instrumentId");
+            Log.d(TAG, "onCreate -> savedInstanceState != null");
         }
 
         Bundle bundle = getArguments();
@@ -47,6 +52,7 @@ public class TrackFragment extends Fragment implements View.OnClickListener
             instrumentId = bundle.getInt("instrumentId");
             trackId = bundle.getInt("trackId");
             instrumentName = bundle.getString("instrumentName", Instrument.getInstrumentName(Instrument.INSTRUMENT_DEFAULT));
+            Log.d(TAG, "onCreate -> bundle != null");
         }
         else
         {
@@ -54,6 +60,7 @@ public class TrackFragment extends Fragment implements View.OnClickListener
             instrumentId = Instrument.INSTRUMENT_DEFAULT;
             trackId = -1;
             instrumentName = Instrument.getInstrumentName(Instrument.INSTRUMENT_DEFAULT);
+            Log.d(TAG, "onCreate -> bundle == null");
         }
     }
 
@@ -79,6 +86,8 @@ public class TrackFragment extends Fragment implements View.OnClickListener
 
         updateButtonStates();
 
+        Log.d(TAG, "onCreateView");
+
         return rootView;
     }
 
@@ -92,12 +101,16 @@ public class TrackFragment extends Fragment implements View.OnClickListener
             {
                 boolean newState = !button.isActivated();
                 button.setActivated(newState);
-                //TODO: java.lang.NullPointerException: Attempt to write to null array
-                if(buttonStates != null)
-                    buttonStates[b] = newState;
+                ensureButtonStatesExist();
+                buttonStates[b] = newState;
                 break;
             }
         }
+    }
+
+    private void ensureButtonStatesExist()
+    {
+        buttonStates = (buttonStates == null)? new boolean[NUMBER_OF_BUTTONS] : buttonStates;
     }
 
     public void setInstrumentText(String text)
@@ -151,6 +164,8 @@ public class TrackFragment extends Fragment implements View.OnClickListener
         outState.putInt("trackId", trackId);
         outState.putInt("instrumentId", instrumentId);
         outState.putBooleanArray("buttonStates", buttonStates);
+
+        Log.d(TAG, "onSaveInstanceState");
 
         super.onSaveInstanceState(outState);
     }
