@@ -1,0 +1,12 @@
+[
+  {
+    "kit-name": "east-coast-hh",
+    "kit-elements" :
+    {
+      "open-hh": "/files/east-coast/openhh.wav",
+      "snare": "/files/east-coast/snare.wav",
+      "kick": "/files/east-coast/kick.wav"
+    }
+
+  }
+]
