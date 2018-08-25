@@ -7,19 +7,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.pstadler.drum.http.HttpDownloadTask;
+import de.pstadler.drum.http.HttpDownloadTaskJSON;
 import de.pstadler.drum.http.IDownloadListener;
 
 
@@ -37,7 +33,7 @@ public class SoundkitsFragment extends Fragment implements IDownloadListener
 
 		//TODO: custom adapter for listview and then add downloaded kits into the listview
 
-		HttpDownloadTask downloadTask = new HttpDownloadTask(this);
+		HttpDownloadTaskJSON downloadTask = new HttpDownloadTaskJSON(this);
 		downloadTask.execute(kitlistDownloadUrl);
     }
 

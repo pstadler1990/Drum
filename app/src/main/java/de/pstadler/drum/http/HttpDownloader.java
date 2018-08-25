@@ -15,7 +15,7 @@ public class HttpDownloader
 	public static final int BUFFER_SIZE = 1024;
 
 	/*Some parts (modified) taken from Android Programming (Phillips et. al)*/
-	private static byte[] getBytesFromUrl(String urlString) throws IOException
+	public static byte[] getBytesFromUrl(String urlString) throws IOException
 	{
 		URL url = new URL(urlString);
 		HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -66,6 +66,8 @@ public class HttpDownloader
 		}
 		return null;
 	}
+
+	/*TODO: Add HttpDownloadSample class for downloading the music files from a kit */
 
 
 }

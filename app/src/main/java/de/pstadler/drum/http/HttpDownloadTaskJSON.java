@@ -1,17 +1,15 @@
 package de.pstadler.drum.http;
 
 import android.os.AsyncTask;
-
 import org.json.JSONArray;
-import org.json.JSONObject;
 import java.util.ArrayList;
 
 
-public class HttpDownloadTask extends AsyncTask<String, Integer, ArrayList<JSONArray>>
+public class HttpDownloadTaskJSON extends AsyncTask<String, Integer, ArrayList<JSONArray>>
 {
 	private IDownloadListener downloadListener;
 
-	public HttpDownloadTask(IDownloadListener downloadListener)
+	public HttpDownloadTaskJSON(IDownloadListener downloadListener)
 	{
 		this.downloadListener = downloadListener;
 	}

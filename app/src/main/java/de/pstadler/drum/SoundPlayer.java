@@ -62,7 +62,7 @@ public class SoundPlayer extends Activity {
     }
     public static void playSound(Context context) {
         Log.v("Sound", "Initializing sounds...");
-        mediaPlayer = MediaPlayer.create(context, R.raw.sound4);
+        //mediaPlayer = MediaPlayer.create(context, R.raw.sound4);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         PlaySound test = new PlaySound();
         test.execute();

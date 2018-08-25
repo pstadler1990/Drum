@@ -10,4 +10,6 @@
     <string name="soundkits_download_kits">Download selected kits</string>
     <string name="dialog_instruments_use_sound">Use selected sound</string>
 
+    <string name="res_soundkits"></string>
+
 </resources>
