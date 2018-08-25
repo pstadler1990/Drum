@@ -1,10 +1,6 @@
 package de.pstadler.drum;
 
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.FragmentManager;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,8 +29,5 @@ public class DialogInstrument extends DialogFragment
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
 	{
 		super.onViewCreated(view, savedInstanceState);
-
-		SoundkitsFragment soundkitsFragment = new SoundkitsFragment();
-		getChildFragmentManager().beginTransaction().add(R.id.dialog_instrument_container_sounds, soundkitsFragment).commit();
 	}
 }

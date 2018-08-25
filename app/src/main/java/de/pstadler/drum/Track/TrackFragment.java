@@ -101,7 +101,7 @@ public class TrackFragment extends Fragment implements View.OnClickListener
     {
         if(v.getId() == R.id.instrument_name)
         {
-            //TODO: Open dialog with a relative layout (50% SoundkitsFragment and 50% SoundsFragment) and a use selected sound button
+            //TODO: Open dialog with a relative layout (50% SoundkitsDownloadFragment and 50% SoundsFragment) and a use selected sound button
 			/*This opens a dialog where the user can choose a sound from the downloaded kits*/
             DialogInstrument dialogInstrument = new DialogInstrument();
             dialogInstrument.show(getFragmentManager(), "Dialog");

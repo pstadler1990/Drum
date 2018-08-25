@@ -5,11 +5,13 @@
     <string name="mainmenu_button_load_track">Load a project</string>
     <string name="mainmenu_button_manage_kits">Manage sound kits</string>
     <string name="newproject_edit_project_name">Project name</string>
-    <string name="soundkits_available_kits">Available kits</string>
     <string name="soundkits_available_sounds">Sounds in this kit</string>
     <string name="soundkits_download_kits">Download selected kits</string>
     <string name="dialog_instruments_use_sound">Use selected sound</string>
+    <string name="soundkits_available_kits">Available kits online</string>
+    <string name="soundkits_downloaded_kits">Downloaded kits</string>
 
-    <string name="res_soundkits"></string>
+
+    <string name="res_sound_kitlist">https://raw.githubusercontent.com/pstadler1990/Drum/master/kits/kitlist.json</string>
 
 </resources>
