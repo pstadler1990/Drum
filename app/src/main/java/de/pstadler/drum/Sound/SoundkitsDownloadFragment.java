@@ -6,17 +6,16 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import de.pstadler.drum.R;
-import de.pstadler.drum.Sound.Soundkit;
 import de.pstadler.drum.http.HttpDownloadTaskJSON;
 import de.pstadler.drum.http.IDownloadListener;
 
@@ -32,10 +31,10 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
     {
         super.onCreate(savedInstanceState);
 
-		//TODO: custom adapter for listview and then add downloaded kits into the listview
 		soundkits = new ArrayList<>();
 		soundkitAdapter = new SoundkitAdapter(getContext(), soundkits);
 
+		/* Downloads a list of soundkits from the github repository */
 		HttpDownloadTaskJSON downloadTask = new HttpDownloadTaskJSON(this);
 		downloadTask.execute(getString(R.string.res_sound_kitlist));
     }
@@ -46,8 +45,17 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
         View rootView = inflater.inflate(R.layout.fragment_download_soundkits, container, false);
 
         listViewAvailableKits = rootView.findViewById(R.id.soundkits_list_kits);
-
         listViewAvailableKits.setAdapter(soundkitAdapter);
+        listViewAvailableKits.setLongClickable(true);
+        listViewAvailableKits.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+		{
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
+			{
+				System.out.print("clicked " + position);
+				return true;
+			}
+		});
 
         return rootView;
     }
@@ -55,7 +63,8 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 	@Override
 	public void onProgress(int p)
 	{
-		/* TODO: Show progress p */
+		return;	/* We don't want to show a progress update here, as we're just downloading
+				   json files */
 	}
 
 	@Override

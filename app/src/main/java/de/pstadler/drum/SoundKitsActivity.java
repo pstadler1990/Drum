@@ -2,9 +2,11 @@ package de.pstadler.drum;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
 import de.pstadler.drum.Sound.SoundkitsDownloadFragment;
 
+
+/* This class is responsible for downloading and displaying a list of available soundkits from
+the github repository */
 public class SoundKitsActivity extends AppCompatActivity
 {
 

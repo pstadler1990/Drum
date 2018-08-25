@@ -1,8 +1,6 @@
 package de.pstadler.drum.Sound;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -15,6 +13,8 @@ import java.util.ArrayList;
 import de.pstadler.drum.R;
 
 
+/* Custom ArrayAdapter for the Soundkit entries
+   [ ICON ] [ SOUNDKIT_NAME ] [ NUMBER_OF_ELEMENTS_IN_SOUNDKIT ] */
 public class SoundkitAdapter extends ArrayAdapter<Soundkit>
 {
 	private ArrayList<Soundkit> soundkits;
@@ -44,6 +44,7 @@ public class SoundkitAdapter extends ArrayAdapter<Soundkit>
 
 		Soundkit soundkit = soundkits.get(position);
 
+		/* If there's no icon, provide the custom one */
 		if(soundkit.icon == null) {
 			icon.setImageDrawable(context.getDrawable(R.drawable.ic_broken_image_black_24dp));
 		}
