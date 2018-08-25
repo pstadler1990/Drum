@@ -3,21 +3,21 @@
 		"kit-name": "east-coast-hh",
 		"kit-elements" :
 		{
-			"open-hh": "/east-coast/openhh.wav",
-			"snare": "/east-coast/snare.wav",
-			"kick": "/east-coast/kick.wav"
+			"open-hh": "east-coast/openhh.wav",
+			"snare": "east-coast/snare.wav",
+			"kick": "east-coast/kick.wav"
 		}
 	},
 	{
 		"kit-name": "French techno",
 		"kit-elements" :
 		{
-			"open-hh": "/french_techno/openhh.wav",
-			"snare": "/french_techno/snare.wav",
-			"kick": "/french_techno/kick.wav",
-			"closed-hh": "/french_techno/closedhh.wav",
-			"cymbal" : "/french_techno/cymbal.wav",
-			"crash" : "/french_techno/crash.wav"
+			"open-hh": "french_techno/openhh.wav",
+			"snare": "french_techno/snare.wav",
+			"kick": "french_techno/kick.wav",
+			"closed-hh": "french_techno/closedhh.wav",
+			"cymbal" : "french_techno/cymbal.wav",
+			"crash" : "french_techno/crash.wav"
 		}
 	}
 ]

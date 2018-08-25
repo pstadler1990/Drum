@@ -1,6 +1,9 @@
 package de.pstadler.drum.Sound;
 
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,13 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import de.pstadler.drum.IRequestDownload;
 import de.pstadler.drum.R;
 import de.pstadler.drum.http.HttpDownloadTaskJSON;
 import de.pstadler.drum.http.IDownloadListener;
@@ -22,11 +25,13 @@ import de.pstadler.drum.http.IDownloadListener;
 
 public class SoundkitsDownloadFragment extends Fragment implements IDownloadListener
 {
+	private String resSoundRootPath;
+	private IRequestDownload iRequestDownload;
     private ListView listViewAvailableKits;
     private ArrayList<Soundkit> soundkits;
     private SoundkitAdapter soundkitAdapter;
 
-    @Override
+	@Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -34,12 +39,30 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 		soundkits = new ArrayList<>();
 		soundkitAdapter = new SoundkitAdapter(getContext(), soundkits);
 
+		resSoundRootPath = getString(R.string.res_sound_root);
+
 		/* Downloads a list of soundkits from the github repository */
 		HttpDownloadTaskJSON downloadTask = new HttpDownloadTaskJSON(this);
 		downloadTask.execute(getString(R.string.res_sound_kitlist));
     }
 
-    @Override
+
+	@Override
+	public void onAttach(Context context)
+	{
+		super.onAttach(context);
+
+		try {
+			iRequestDownload = (IRequestDownload) getActivity();
+		}
+		catch (ClassCastException e)
+		{
+			throw new ClassCastException(context.toString() +
+					" has not implemented IRequestDownload interface!");
+		}
+	}
+
+	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View rootView = inflater.inflate(R.layout.fragment_download_soundkits, container, false);
@@ -50,9 +73,39 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
         listViewAvailableKits.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
 		{
 			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
+			public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id)
 			{
-				System.out.print("clicked " + position);
+				/* Show dialog to confirm the download of the selected soundkit */
+				AlertDialog dialog = new AlertDialog.Builder(getContext())
+						.setPositiveButton("Download kit", new DialogInterface.OnClickListener()	//TODO: string hardcoded
+						{
+							@Override
+							public void onClick(DialogInterface dialog, int which)
+							{
+								/* TODO: Download the selected kit from the github repository
+								   Store the files onto the file system
+								   Add kit to downloaded kits in the database*/
+								Soundkit soundkit = (Soundkit) listViewAvailableKits.getItemAtPosition(position);
+								if(soundkit != null)
+								{
+									String[] urlStrings = soundkit.urlStrings.toArray(new String[soundkit.urlStrings.size()]);
+									iRequestDownload.requestDownload(urlStrings);
+								}
+							}
+						})
+						.setNegativeButton("Cancel", new DialogInterface.OnClickListener()			//TODO: string hardcoded
+						{
+							@Override
+							public void onClick(DialogInterface dialog, int which)
+							{
+								dialog.cancel();
+							}
+						})
+						.setTitle("Download soundkit?")
+						.create();
+
+				dialog.show();
+
 				return true;
 			}
 		});
@@ -92,7 +145,7 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 					String soundName = iterator.next();
 					if(soundName.length() > 0)
 					{
-						String soundUrlString = kitElements.optString(soundName);
+						String soundUrlString = resSoundRootPath + kitElements.optString(soundName);
 						if (soundUrlString.length() > 0)
 						{
 							soundkit.urlStrings.add(soundUrlString);
