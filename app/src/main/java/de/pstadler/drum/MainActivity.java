@@ -1,18 +1,21 @@
 package de.pstadler.drum;
 
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
+
+import de.pstadler.drum.Track.BarFragment;
+import de.pstadler.drum.Track.Instrument;
+import de.pstadler.drum.Track.TrackFragment;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener
@@ -24,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private LinearLayout mainAppbar;
     private Button buttonAddTrack;
     private Button buttonAddPage;
+    private ImageButton buttonPlayStop;
     protected ArrayList<BarFragment> barFragments;
 
     private int tracks = 0;
@@ -40,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainAppbar = findViewById(R.id.main_appbar);
         buttonAddTrack = findViewById(R.id.button_add_track);
         buttonAddPage = findViewById(R.id.button_add_page);
+        buttonPlayStop = findViewById(R.id.button_playstop);
 
         mainAppbar.setElevation(getResources().getDimension(R.dimen.app_main_topbar_elevation));
 

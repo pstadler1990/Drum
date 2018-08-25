@@ -1,9 +1,10 @@
-package de.pstadler.drum;
+package de.pstadler.drum.Track;
 
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import de.pstadler.drum.DialogInstrument;
+import de.pstadler.drum.R;
 
 
 public class TrackFragment extends Fragment implements View.OnClickListener
@@ -74,6 +78,7 @@ public class TrackFragment extends Fragment implements View.OnClickListener
         instrumentTextView = rootView.findViewById(R.id.instrument_name);
 
         setInstrumentText(instrumentName);
+        instrumentTextView.setOnClickListener(this);
 
         for(int i=1; i<=NUMBER_OF_BUTTONS; i++)
         {
@@ -94,6 +99,16 @@ public class TrackFragment extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View v)
     {
+        if(v.getId() == R.id.instrument_name)
+        {
+            //TODO: Open dialog with a relative layout (50% SoundkitsFragment and 50% SoundsFragment) and a use selected sound button
+			/*This opens a dialog where the user can choose a sound from the downloaded kits*/
+            DialogInstrument dialogInstrument = new DialogInstrument();
+            dialogInstrument.show(getFragmentManager(), "Dialog");
+            return;
+        }
+
+        /*onClickListener for the 8 bar buttons*/
         for(int b=0; b < buttons.size(); b++)
         {
             Button button = buttons.get(b);

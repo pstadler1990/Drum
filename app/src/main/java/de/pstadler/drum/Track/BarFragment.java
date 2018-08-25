@@ -1,4 +1,4 @@
-package de.pstadler.drum;
+package de.pstadler.drum.Track;
 
 
 import android.support.annotation.NonNull;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import java.util.List;
+
+import de.pstadler.drum.R;
 
 
 public class BarFragment extends Fragment implements ITrackListener

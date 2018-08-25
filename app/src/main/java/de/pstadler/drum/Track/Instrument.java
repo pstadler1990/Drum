@@ -1,4 +1,4 @@
-package de.pstadler.drum;
+package de.pstadler.drum.Track;
 
 public abstract class Instrument
 {
