@@ -53,7 +53,7 @@ public class SoundkitAdapter extends ArrayAdapter<Soundkit>
 		}
 
 		name.setText(soundkit.name);
-		elements.setText(Integer.toString(soundkit.urlStrings.size()));
+		elements.setText(Integer.toString(soundkit.downloadSounds.size()));
 
 		return v;
 	}

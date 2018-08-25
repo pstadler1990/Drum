@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class HttpDownloadTaskSound extends AsyncTask<String, Integer, ArrayList<byte[]>>
+public class HttpDownloadTaskSound extends AsyncTask<DownloadSound, Integer, ArrayList<DownloadSound>>
 {
 	private IDownloadListener downloadListener;
 
@@ -15,24 +15,25 @@ public class HttpDownloadTaskSound extends AsyncTask<String, Integer, ArrayList<
 	}
 
 	@Override
-	protected ArrayList<byte[]> doInBackground(String... urls)
+	protected ArrayList<DownloadSound> doInBackground(DownloadSound... downloadSounds)
 	{
-		ArrayList<byte[]> result = new ArrayList<>();
+		ArrayList<DownloadSound> result = new ArrayList<>();
 
-		int numberOfDownloads = urls.length;
+		int numberOfDownloads = downloadSounds.length;
 		int currentNumber = 0;
 
-		for(String url : urls)
+		for(DownloadSound sound : downloadSounds)
 		{
 			byte[] bytesFile = new byte[HttpDownloader.BUFFER_SIZE];
 
 			try {
-				bytesFile = HttpDownloader.getBytesFromUrl(url);
+				bytesFile = HttpDownloader.getBytesFromUrl(sound.url);
 			}
 			catch (IOException e) {
 				e.printStackTrace();
 			}
-			result.add(bytesFile);
+			sound.bytes = bytesFile;
+			result.add(sound);
 
 			/*Publish progress*/
 			int percentage = (int)((currentNumber / numberOfDownloads) * 100.0f);
@@ -42,9 +43,9 @@ public class HttpDownloadTaskSound extends AsyncTask<String, Integer, ArrayList<
 	}
 
 	@Override
-	protected void onPostExecute(ArrayList<byte[]> byteFiles)
+	protected void onPostExecute(ArrayList<DownloadSound> downloadedSounds)
 	{
-		downloadListener.onDownloadComplete(byteFiles);
+		downloadListener.onDownloadComplete(downloadedSounds);
 	}
 
 	@Override

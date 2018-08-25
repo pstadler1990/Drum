@@ -1,6 +1,9 @@
 package de.pstadler.drum;
 
-public interface IRequestDownload
+import de.pstadler.drum.http.DownloadSound;
+
+@SuppressWarnings("unchecked")
+public interface IRequestDownload<T>
 {
-	void requestDownload(String...urls);
+	void requestDownload(T...sounds);
 }

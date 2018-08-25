@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import de.pstadler.drum.IRequestDownload;
 import de.pstadler.drum.R;
+import de.pstadler.drum.http.DownloadSound;
 import de.pstadler.drum.http.HttpDownloadTaskJSON;
 import de.pstadler.drum.http.IDownloadListener;
 
@@ -59,6 +61,7 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 		}
 	}
 
+	@NonNull
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -79,14 +82,12 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 							@Override
 							public void onClick(DialogInterface dialog, int which)
 							{
-								/* TODO: Download the selected kit from the github repository
-								   Store the files onto the file system
-								   Add kit to downloaded kits in the database*/
+								/* Requests the download of the selected kit from the github repository */
 								Soundkit soundkit = (Soundkit) listViewAvailableKits.getItemAtPosition(position);
 								if(soundkit != null)
 								{
-									String[] urlStrings = soundkit.urlStrings.toArray(new String[soundkit.urlStrings.size()]);
-									iRequestDownload.requestDownload(urlStrings);
+									DownloadSound[] downloadSounds = soundkit.downloadSounds.toArray(new DownloadSound[soundkit.downloadSounds.size()]);
+									iRequestDownload.requestDownload(downloadSounds);
 								}
 							}
 						})
@@ -134,7 +135,7 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 			/* Store url strings in the sound kit to be able to download the sample files later */
 			if(kitElements.length() > 0)
 			{
-				soundkit.urlStrings = new ArrayList<>();
+				soundkit.downloadSounds = new ArrayList<>();
 
 				Iterator<String> iterator = kitElements.keys();
 				while(iterator.hasNext())
@@ -146,7 +147,13 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 						String soundUrlString = getString(R.string.res_sound_root_file_raw, kitElements.optString(soundName));
 						if (soundUrlString.length() > 0)
 						{
-							soundkit.urlStrings.add(soundUrlString);
+							/* DownloadSound is a boilerplate object to store important parameters
+							   with a sound url, i.e. name and the name of the kit */
+							DownloadSound downloadSound = new DownloadSound();
+							downloadSound.kitName = soundkit.name;
+							downloadSound.name = soundName;
+							downloadSound.url = soundUrlString;
+							soundkit.downloadSounds.add(downloadSound);
 						}
 					}
 				}
