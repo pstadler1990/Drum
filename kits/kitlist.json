@@ -3,9 +3,9 @@
 		"kit-name": "east-coast-hh",
 		"kit-elements" :
 		{
-			"open-hh": "east-coast/openhh.wav",
-			"snare": "east-coast/snare.wav",
-			"kick": "east-coast/kick.wav"
+			"open-hh": "east_coast/openhh.wav",
+			"snare": "east_coast/snare.wav",
+			"kick": "east_coast/kick.wav"
 		}
 	},
 	{

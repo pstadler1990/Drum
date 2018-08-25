@@ -25,7 +25,6 @@ import de.pstadler.drum.http.IDownloadListener;
 
 public class SoundkitsDownloadFragment extends Fragment implements IDownloadListener
 {
-	private String resSoundRootPath;
 	private IRequestDownload iRequestDownload;
     private ListView listViewAvailableKits;
     private ArrayList<Soundkit> soundkits;
@@ -38,8 +37,6 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 
 		soundkits = new ArrayList<>();
 		soundkitAdapter = new SoundkitAdapter(getContext(), soundkits);
-
-		resSoundRootPath = getString(R.string.res_sound_root);
 
 		/* Downloads a list of soundkits from the github repository */
 		HttpDownloadTaskJSON downloadTask = new HttpDownloadTaskJSON(this);
@@ -145,7 +142,8 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 					String soundName = iterator.next();
 					if(soundName.length() > 0)
 					{
-						String soundUrlString = resSoundRootPath + kitElements.optString(soundName);
+						/* Converts the relative sound file paths to the required format: /path/file.wav?raw=true */
+						String soundUrlString = getString(R.string.res_sound_root_file_raw, kitElements.optString(soundName));
 						if (soundUrlString.length() > 0)
 						{
 							soundkit.urlStrings.add(soundUrlString);
