@@ -53,7 +53,9 @@ public class DB
 				message.what = MESSAGE_TYPE_GET_SOUNDS;
 				message.setData(bundle);
 
-				handler.dispatchMessage(message);
+				if(handler != null) {
+					handler.dispatchMessage(message);
+				}
 			}
 		}).start();
 	}
@@ -72,7 +74,10 @@ public class DB
 
 				Message message = new Message();
 				message.what = MESSAGE_TYPE_INSERT_SOUND_OK;
-				handler.dispatchMessage(message);
+
+				if(handler != null) {
+					handler.dispatchMessage(message);
+				}
 			}
 		}).start();
 	}

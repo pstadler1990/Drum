@@ -52,18 +52,21 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 		{
 			DownloadSound currentSound = downloadedSounds.get(b);
 
-			/* Write the files to the internal disk */
+
+			/* Write the files to the internal disk
+			   writeFileToDisk(..) returns the absolute path to the file if it was successful */
+
 			String fileNameWithExt = FileAccessor.getWavFilename(getApplicationContext(), currentSound.name);
 			String dir = currentSound.kitName;
+			String path = FileAccessor.writeFileToDisk(getApplicationContext(), dir, fileNameWithExt, currentSound.bytes);
 
-			FileAccessor.writeFileToDisk(getApplicationContext(), dir, fileNameWithExt, currentSound.bytes);
-
-			sounds[b].kitName = currentSound.kitName;
-			sounds[b].name = currentSound.name;
-			sounds[b].path = new File(fileNameWithExt).getAbsolutePath();
+			if(path.length() > 0)
+			{
+				sounds[b] = new Sound(currentSound.name, currentSound.kitName, path);
+			}
 		}
 
-		/* TODO: Call Database API to store the file path references */
+		/* Call Database API to store the file path references */
 		((App) getApplicationContext()).getDatabase().insertSound(null, sounds);
 	}
 

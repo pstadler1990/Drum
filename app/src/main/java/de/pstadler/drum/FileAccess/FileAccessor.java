@@ -16,7 +16,7 @@ public class FileAccessor
 {
 	private static final int BUFFER_SIZE = 1024;
 
-	public static boolean writeFileToDisk(Context context, String directory, String fileNameWithExt, byte[] bytes)
+	public static String writeFileToDisk(Context context, String directory, String fileNameWithExt, byte[] bytes)
 	{
 		FileOutputStream outputStream;
 
@@ -31,13 +31,13 @@ public class FileAccessor
 				outputStream = new FileOutputStream(file);
 				outputStream.write(bytes);
 				outputStream.close();
-				return true;
+				return file.getAbsolutePath();
 			}
 			catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		return false;
+		return "";
 	}
 
 	public static File[] getFilesInDirectory(Context context, String directory)
