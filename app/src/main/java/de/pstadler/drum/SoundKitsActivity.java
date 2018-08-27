@@ -2,8 +2,12 @@ package de.pstadler.drum;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import de.pstadler.drum.Database.Sound;
 import de.pstadler.drum.FileAccess.FileAccessor;
 import de.pstadler.drum.Sound.SoundkitsDownloadFragment;
 import de.pstadler.drum.http.DownloadSound;
@@ -42,17 +46,25 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 		   Write the files onto the internal disk and create an entry in the database */
 
 		ArrayList<DownloadSound> downloadedSounds = (ArrayList<DownloadSound>) result;
+		Sound[] sounds = new Sound[downloadedSounds.size()];
 
 		for(int b=0; b<downloadedSounds.size(); b++)
 		{
-			/* Write the files to the internal disk */
-			String fileNameWithExt = FileAccessor.getWavFilename(getApplicationContext(), downloadedSounds.get(b).name);
-			String dir = downloadedSounds.get(b).kitName;
+			DownloadSound currentSound = downloadedSounds.get(b);
 
-			FileAccessor.writeFileToDisk(getApplicationContext(), dir, fileNameWithExt, downloadedSounds.get(b).bytes);
+			/* Write the files to the internal disk */
+			String fileNameWithExt = FileAccessor.getWavFilename(getApplicationContext(), currentSound.name);
+			String dir = currentSound.kitName;
+
+			FileAccessor.writeFileToDisk(getApplicationContext(), dir, fileNameWithExt, currentSound.bytes);
+
+			sounds[b].kitName = currentSound.kitName;
+			sounds[b].name = currentSound.name;
+			sounds[b].path = new File(fileNameWithExt).getAbsolutePath();
 		}
 
 		/* TODO: Call Database API to store the file path references */
+		((App) getApplicationContext()).getDatabase().insertSound(null, sounds);
 	}
 
 	@Override
