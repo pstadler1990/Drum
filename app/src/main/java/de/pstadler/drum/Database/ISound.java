@@ -20,4 +20,10 @@ public interface ISound
 
 	@Query("DELETE FROM Sound WHERE kitName = :kitName")
 	void deleteKit(String kitName);
+
+	@Query("SELECT COUNT(*) FROM Sound WHERE kitName = :kitName")
+	int getKitExists(String kitName);
+
+	@Query("SELECT COUNT(*) FROM Sound WHERE path = :path")
+	int getSoundExists(String path);
 }

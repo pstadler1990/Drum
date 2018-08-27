@@ -81,6 +81,21 @@ public class FileAccessor
 		return readFileFromDisk(absolutePath);
 	}
 
+	public static boolean deleteFileFromDisk(String absolutePath)
+	{
+		File file = new File(absolutePath);
+		return file.delete();
+	}
+
+	public static void deleteDirectoryRecursivelyFromDisk(Context context, String directory)
+	{
+		File[] files = getFilesInDirectory(context, directory);
+		for(File file : files)
+		{
+			file.delete();
+		}
+	}
+
 	/* Convert the sound name to a standardized file name => <sound_name>.wav */
 	public static String getWavFilename(Context context, String fileNameWithoutExt)
 	{
