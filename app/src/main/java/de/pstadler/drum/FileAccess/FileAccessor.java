@@ -75,10 +75,15 @@ public class FileAccessor
 		return null;
 	}
 
-	public static byte[] readFileFromDisk(String directory, String fileNameWithExt)
+	public static byte[] readFileFromDisk(Context context, String directory, String fileNameWithExt)
 	{
-		String absolutePath = new File(directory, fileNameWithExt).getAbsolutePath();
+		String absolutePath = getAbsolutePath(context, directory, fileNameWithExt);
 		return readFileFromDisk(absolutePath);
+	}
+
+	public static String getAbsolutePath(Context context, String directory, String fileNameWithExt)
+	{
+		return new File(context.getDir(directory, MODE_PRIVATE), fileNameWithExt).getAbsolutePath();
 	}
 
 	public static boolean deleteFileFromDisk(String absolutePath)

@@ -6,7 +6,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
 
+import java.lang.ref.WeakReference;
+
 import de.pstadler.drum.FileAccess.FileAccessor;
+import de.pstadler.drum.Sound.Soundkit;
 
 
 public class DB
@@ -16,13 +19,13 @@ public class DB
 	public static final int MESSAGE_TYPE_INSERT_SOUND_OK = 2;
 	public static final int MESSAGE_TYPE_DELETE_KIT_OK = 3;
 	public static final int MESSAGE_TYPE_KIT_EXISTS = 4;
+	public static final int MESSAGE_TYPE_GET_SOUNDKITS = 5;
 
 	private static final String soundDatabaseName = "DB_SOUND";		//TODO: hard coded string
 	private SoundDatabase soundDatabase;
 	private Context context;
 
 
-	@SuppressLint("HandlerLeak")
 	public DB(Context context)
 	{
 		if (context != null)
@@ -55,6 +58,30 @@ public class DB
 
 				bundle.putParcelableArray("getSounds", sounds);		//TODO: hard coded string
 				message.what = MESSAGE_TYPE_GET_SOUNDS;
+				message.setData(bundle);
+
+				if(handler != null) {
+					handler.onMessageReceived(message);
+				}
+			}
+		}).start();
+	}
+
+	public void getSoundkits(final IDBHandler handler)
+	{
+		new Thread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				Sound[] sounds = soundDatabase.getSoundInterface().getSounds();
+				Soundkit[] soundkits = DBHelper.createSoundkitsFromSounds(sounds);
+
+				Message message = new Message();
+				Bundle bundle = new Bundle();
+
+				bundle.putParcelableArray("getSounds", soundkits);		//TODO: hard coded string
+				message.what = MESSAGE_TYPE_GET_SOUNDKITS;
 				message.setData(bundle);
 
 				if(handler != null) {
@@ -148,7 +175,7 @@ public class DB
 				message.what = MESSAGE_TYPE_KIT_EXISTS;
 
 				Bundle bundle = new Bundle();
-				bundle.putBoolean("SoundExists", exists);		//TODO: hard coded string
+				bundle.putBoolean("soundExists", exists);		//TODO: hard coded string
 				message.setData(bundle);
 
 				if(handler != null) {

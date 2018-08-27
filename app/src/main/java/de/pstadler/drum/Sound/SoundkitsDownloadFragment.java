@@ -62,7 +62,7 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 
 	@NonNull
 	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState)
     {
         View rootView = inflater.inflate(R.layout.fragment_download_soundkits, container, false);
 
@@ -86,6 +86,7 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 								if(soundkit != null)
 								{
 									DownloadSound[] downloadSounds = soundkit.downloadSounds.toArray(new DownloadSound[soundkit.downloadSounds.size()]);
+									soundkit.elements = downloadSounds.length;
 									iRequestDownload.requestDownload(downloadSounds);
 								}
 							}
@@ -153,6 +154,7 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 							downloadSound.name = soundName;
 							downloadSound.url = soundUrlString;
 							soundkit.downloadSounds.add(downloadSound);
+							soundkit.elements++;
 						}
 					}
 				}

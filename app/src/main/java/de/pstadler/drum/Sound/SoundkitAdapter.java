@@ -9,13 +9,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import de.pstadler.drum.R;
 
 
 /* Custom ArrayAdapter for the Soundkit entries
    [ ICON ] [ SOUNDKIT_NAME ] [ NUMBER_OF_ELEMENTS_IN_SOUNDKIT ] */
-public class SoundkitAdapter extends ArrayAdapter<Soundkit>
+public class SoundkitAdapter extends ArrayAdapter<Soundkit> implements Serializable
 {
 	private ArrayList<Soundkit> soundkits;
 	private Context context;
@@ -53,7 +55,7 @@ public class SoundkitAdapter extends ArrayAdapter<Soundkit>
 		}
 
 		name.setText(soundkit.name);
-		elements.setText(Integer.toString(soundkit.downloadSounds.size()));
+		elements.setText(Integer.toString(soundkit.elements));
 
 		return v;
 	}
