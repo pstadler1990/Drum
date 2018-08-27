@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 
 
@@ -13,6 +12,7 @@ public class DB
 	public static final int MESSAGE_TYPE_UNDEFINED = 0;
 	public static final int MESSAGE_TYPE_GET_SOUNDS = 1;
 	public static final int MESSAGE_TYPE_INSERT_SOUND_OK = 2;
+	public static final int MESSAGE_TYPE_DELETE_KIT_OK = 3;
 
 	private static final String soundDatabaseName = "DB_SOUND";
 	private SoundDatabase soundDatabase;
@@ -36,7 +36,7 @@ public class DB
 
 
 	/* Get an array of sounds from the database and send them via the given handler */
-	public void getSoundsFromKit(final Handler handler, final String kitName)
+	public void getSoundsFromKit(final IDBHandler handler, final String kitName)
 	{
 		new Thread(new Runnable()
 		{
@@ -49,18 +49,17 @@ public class DB
 				Bundle bundle = new Bundle();
 
 				bundle.putParcelableArray("getSounds", sounds);
-				message.setTarget(handler);
 				message.what = MESSAGE_TYPE_GET_SOUNDS;
 				message.setData(bundle);
 
 				if(handler != null) {
-					handler.dispatchMessage(message);
+					handler.onMessageReceived(message);
 				}
 			}
 		}).start();
 	}
 
-	public void insertSound(final Handler handler, final Sound... sounds)
+	public void insertSound(final IDBHandler handler, final Sound... sounds)
 	{
 		new Thread(new Runnable()
 		{
@@ -76,7 +75,29 @@ public class DB
 				message.what = MESSAGE_TYPE_INSERT_SOUND_OK;
 
 				if(handler != null) {
-					handler.dispatchMessage(message);
+					handler.onMessageReceived(message);
+				}
+			}
+		}).start();
+	}
+
+	public void deleteKit(final IDBHandler handler, final String...kitNames)
+	{
+		new Thread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				for(String kitName : kitNames)
+				{
+					soundDatabase.getSoundInterface().deleteKit(kitName);
+				}
+
+				Message message = new Message();
+				message.what = MESSAGE_TYPE_DELETE_KIT_OK;
+
+				if(handler != null) {
+					handler.onMessageReceived(message);
 				}
 			}
 		}).start();

@@ -46,11 +46,11 @@ public class FileAccessor
 		return filesDir.listFiles();
 	}
 
-	public static byte[] readFileFromDisk(String directory, String fileNameWithExt)
+	public static byte[] readFileFromDisk(String absolutePath)
 	{
 		byte[] buf = new byte[BUFFER_SIZE];
 
-		File file = new File(directory, fileNameWithExt);
+		File file = new File(absolutePath);
 		try
 		{
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -73,6 +73,12 @@ public class FileAccessor
 		}
 
 		return null;
+	}
+
+	public static byte[] readFileFromDisk(String directory, String fileNameWithExt)
+	{
+		String absolutePath = new File(directory, fileNameWithExt).getAbsolutePath();
+		return readFileFromDisk(absolutePath);
 	}
 
 	/* Convert the sound name to a standardized file name => <sound_name>.wav */

@@ -10,9 +10,6 @@ import android.support.annotation.NonNull;
 @Entity
 public class Sound implements Parcelable
 {
-	@PrimaryKey(autoGenerate = true)
-	public int id;
-
 	@NonNull
 	public String name;
 
@@ -20,6 +17,7 @@ public class Sound implements Parcelable
 	public String kitName;
 
 	@NonNull
+	@PrimaryKey
 	public String path;
 
 
