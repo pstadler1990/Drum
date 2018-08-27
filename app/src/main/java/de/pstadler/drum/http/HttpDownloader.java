@@ -28,13 +28,15 @@ public class HttpDownloader
 			{
 				throw new IOException(httpURLConnection.getResponseMessage());
 			}
-			int bytesRead = 0;
+			int bytesRead;
+
 			byte[] buf = new byte[BUFFER_SIZE];
 			while ((bytesRead = inputStream.read(buf)) > 0)
 			{
 				outputStream.write(buf, 0, bytesRead);
 			}
 			outputStream.close();
+
 			return outputStream.toByteArray();
 		}
 		finally
@@ -53,17 +55,15 @@ public class HttpDownloader
 		try
 		{
 			String jsonString = getStringFromUrl(urlString);
-			JSONArray jsonArray = new JSONArray(jsonString);
-			return jsonArray;
+			return new JSONArray(jsonString);
 		}
-		catch (JSONException e)
-		{
+		catch (JSONException e) {
 			e.printStackTrace();
 		}
-		catch (IOException e)
-		{
+		catch (IOException e) {
 			e.printStackTrace();
 		}
+
 		return null;
 	}
 

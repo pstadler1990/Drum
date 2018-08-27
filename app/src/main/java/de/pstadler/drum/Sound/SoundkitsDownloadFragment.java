@@ -17,7 +17,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import de.pstadler.drum.IRequestDownload;
 import de.pstadler.drum.R;
 import de.pstadler.drum.http.DownloadSound;
@@ -81,7 +80,7 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 						{
 							@Override
 							public void onClick(DialogInterface dialog, int which)
-							{
+							{						// TODO: hardcoded string
 								/* Requests the download of the selected kit from the github repository */
 								Soundkit soundkit = (Soundkit) listViewAvailableKits.getItemAtPosition(position);
 								if(soundkit != null)
@@ -99,7 +98,7 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 								dialog.cancel();
 							}
 						})
-						.setTitle("Download soundkit?")
+						.setTitle("Download soundkit?")													// TODO: hardcoded string
 						.create();
 
 				dialog.show();
@@ -129,8 +128,8 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 			JSONObject jsonObject = jsonList.get(0).optJSONObject(i);
 
 			Soundkit soundkit = new Soundkit();
-			soundkit.name = jsonObject.optString("kit-name");
-			JSONObject kitElements = jsonObject.optJSONObject("kit-elements");
+			soundkit.name = jsonObject.optString("kit-name");				//TODO: hardcoded string
+			JSONObject kitElements = jsonObject.optJSONObject("kit-elements");	//TODO: hardcoded string
 
 			/* Store url strings in the sound kit to be able to download the sample files later */
 			if(kitElements.length() > 0)

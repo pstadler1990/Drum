@@ -1,15 +1,10 @@
 package de.pstadler.drum;
 
-import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.lang.invoke.ConstantCallSite;
 import java.util.ArrayList;
 import java.util.List;
-
+import de.pstadler.drum.FileAccess.FileAccessor;
 import de.pstadler.drum.Sound.SoundkitsDownloadFragment;
 import de.pstadler.drum.http.DownloadSound;
 import de.pstadler.drum.http.HttpDownloadTaskSound;
@@ -30,6 +25,8 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 		SoundkitsDownloadFragment soundkitsDownloadFragment = new SoundkitsDownloadFragment();
 		getSupportFragmentManager().beginTransaction().add(R.id.soundkits_available_online_container, soundkitsDownloadFragment).commit();
 
+
+		FileAccessor.readFileFromDisk("east-coast-hh", "kick.wav");
 	}
 
 	@Override
@@ -48,23 +45,11 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 
 		for(int b=0; b<downloadedSounds.size(); b++)
 		{
-			/* Convert the sound name to a standardized file name => <sound_name>.wav */
-			String fileName = getString(R.string.res_sound_name_template, downloadedSounds.get(b).name);
-			FileOutputStream outputStream;
+			/* Write the files to the internal disk */
+			String fileNameWithExt = FileAccessor.getWavFilename(getApplicationContext(), downloadedSounds.get(b).name);
+			String dir = downloadedSounds.get(b).kitName;
 
-			File file = new File(getDir(downloadedSounds.get(b).kitName, MODE_PRIVATE), fileName);
-			file.setWritable(true);
-			file.setReadable(true);
-
-			try
-			{
-				outputStream = new FileOutputStream(file);
-				outputStream.write(downloadedSounds.get(b).bytes);
-				outputStream.close();
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
+			FileAccessor.writeFileToDisk(getApplicationContext(), dir, fileNameWithExt, downloadedSounds.get(b).bytes);
 		}
 
 		/* TODO: Call Database API to store the file path references */
