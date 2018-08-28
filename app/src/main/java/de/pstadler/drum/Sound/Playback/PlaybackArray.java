@@ -13,4 +13,14 @@ public class PlaybackArray
 		this.sound = sound;
 		this.playbackArray = playbackArray;
 	}
+
+	public Sound getSound()
+	{
+		return sound;
+	}
+
+	public boolean[] getPlaybackArray()
+	{
+		return playbackArray;
+	}
 }

@@ -78,12 +78,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             createNewPage();
 
         /* Create playback engine */
-        playbackEngine = new PlaybackEngine(5);	/* n = number of channels */
-		Player player = new Player();
-		Player player1 = new Player();
-		Player player2 = new Player();
-		playbackEngine.addPlayer(new Player[] {player, player1, player2});
-		playbackEngine.addPlayer(this);
+        playbackEngine = new PlaybackEngine(TRACKS_MAX, this);	/* n = number of channels */
     }
 
     private void createNewPage(int...pageNumber)
@@ -205,9 +200,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 			case R.id.button_playstop:
 				/* Preload the first bar */
 				BarFragment bar = (BarFragment) pagerAdapter.getItem(0);
-				PlaybackConverter.convertBarToArray(bar);
+				PlaybackArray[] playbackArrays = PlaybackConverter.convertBarToArray(bar);
 
+				int availablePlayers = playbackEngine.getPlayers().length;
+				int instrumentsInBar = bar.getTrackCount();
+
+				if(availablePlayers < instrumentsInBar)
+				{
+					int d = instrumentsInBar - availablePlayers;
+
+					for (int i=0; i<d; i++)
+					{
+						Player player = new Player();
+						playbackEngine.addPlayer(player);
+					}
+
+					Player[] players = playbackEngine.getPlayers();
+
+					for(int i=0; i<instrumentsInBar; i++)
+					{
+						players[i].preparePlayback(playbackArrays[i]);
+					}
+				}
 				playbackEngine.startPlayback();
+				//TODO: Lock play button and change icon to stop / pause
 				break;
         }
     }
@@ -225,10 +241,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 			{
 				BarFragment bar = (BarFragment) pagerAdapter.getItem(barId + 1);
 				PlaybackArray[] playbackArrays = PlaybackConverter.convertBarToArray(bar);
-				// TODO: pass converted array to player instance
+
+				Player[] players = playbackEngine.getPlayers();
+
+				for(int i=0; i<pagerAdapter.getCount(); i++)
+				{
+					players[i].preparePlayback(playbackArrays[i]);
+				}
 			}
 			else {
 				playbackEngine.stopPlayback();
+				//TODO: Unlock play button again and change back to play icon
 				return;
 			}
 		}

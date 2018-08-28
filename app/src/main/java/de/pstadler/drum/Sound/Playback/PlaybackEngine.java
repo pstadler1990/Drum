@@ -10,7 +10,8 @@ import static de.pstadler.drum.Track.TrackFragment.NUMBER_OF_BUTTONS;
 
 public class PlaybackEngine extends ScheduledThreadPoolExecutor
 {
-	private ArrayList<IClock> handlers;
+	private IClock listenerActivity;
+	private ArrayList<Player> players;
 	private int bpm = 80;					// TODO: User must be able to set the bpm from the UI
 	private int currentBarNumber = 0;
 	private int currentStepNumber = 0;
@@ -18,15 +19,21 @@ public class PlaybackEngine extends ScheduledThreadPoolExecutor
 	static ScheduledFuture<?> t;
 	private boolean stopProcess = false;
 
-	public PlaybackEngine(int corePoolSize)
+	public PlaybackEngine(int corePoolSize, IClock listenerActivity)
 	{
 		super(corePoolSize);
-		this.handlers = new ArrayList<>();
+		this.players = new ArrayList<>();
+		this.listenerActivity = listenerActivity;
 	}
 
-	public void addPlayer(IClock...handlers)
+	public void addPlayer(Player...players)
 	{
-		this.handlers.addAll(Arrays.asList(handlers));
+		this.players.addAll(Arrays.asList(players));
+	}
+
+	public Player[] getPlayers()
+	{
+		return players.toArray(new Player[0]);
 	}
 
 	public void startPlayback()
@@ -45,9 +52,10 @@ public class PlaybackEngine extends ScheduledThreadPoolExecutor
 				}
 				else
 				{
-					for (IClock player : handlers) {
+					for (IClock player : players) {
 						player.onClockUpdate(currentBarNumber, currentStepNumber);
 					}
+					listenerActivity.onClockUpdate(currentBarNumber, currentStepNumber);
 
 					if (currentStepNumber++ >= numberOfSteps)
 					{
@@ -56,7 +64,7 @@ public class PlaybackEngine extends ScheduledThreadPoolExecutor
 					}
 				}
 			}
-		}, 0, 1000, TimeUnit.MILLISECONDS);	// TODO: convert BPM into milliseconds
+		}, 0, 300, TimeUnit.MILLISECONDS);	// TODO: convert BPM into milliseconds
 	}
 
 	public void stopPlayback()
