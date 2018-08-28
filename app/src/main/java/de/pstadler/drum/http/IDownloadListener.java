@@ -4,6 +4,8 @@ import java.util.List;
 
 public interface IDownloadListener
 {
-	void onProgress(int p);
+	void onDownloadStart();
+	void onDownloadProgress(int p);
 	void onDownloadComplete(List<?> result);
+	void onDownloadCanceled();
 }

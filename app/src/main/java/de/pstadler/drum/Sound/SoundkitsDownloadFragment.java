@@ -112,10 +112,22 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
     }
 
 	@Override
-	public void onProgress(int p)
+	public void onDownloadStart()
+	{
+
+	}
+
+	@Override
+	public void onDownloadProgress(int p)
 	{
 		return;	/* We don't want to show a progress update here, as we're just downloading
 				   json files */
+	}
+
+	@Override
+	public void onDownloadCanceled()
+	{
+		return; /* TODO: implement */
 	}
 
 	@Override

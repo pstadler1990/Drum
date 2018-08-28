@@ -1,11 +1,9 @@
 package de.pstadler.drum;
 
+import android.app.ProgressDialog;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ProgressBar;
-
 import java.util.ArrayList;
 import java.util.List;
 import de.pstadler.drum.Database.DBHelper;
@@ -18,10 +16,12 @@ import de.pstadler.drum.Sound.SoundkitsDownloadFragment;
 import de.pstadler.drum.http.DownloadSound;
 import de.pstadler.drum.http.HttpDownloadTaskSound;
 import de.pstadler.drum.http.IDownloadListener;
+import static de.pstadler.drum.Database.DB.MESSAGE_TYPE_DELETE_KIT_OK;
 import static de.pstadler.drum.Database.DB.MESSAGE_TYPE_GET_SOUNDKITS;
 import static de.pstadler.drum.Database.DB.MESSAGE_TYPE_GET_SOUNDS;
 import static de.pstadler.drum.Database.DB.MESSAGE_TYPE_INSERT_SOUND_OK;
 import static de.pstadler.drum.Database.DB.MESSAGE_TYPE_KIT_EXISTS;
+
 
 /* This class is responsible for downloading and displaying a list of available soundkits from
 the github repository */
@@ -31,7 +31,7 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 {
 	private SoundkitsDownloadFragment soundkitsDownloadFragment;
 	private SoundkitDownloadedFragment soundkitDownloadedFragment;
-	private ProgressBar spinner;
+	private ProgressDialog progressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -39,21 +39,27 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sound_kits);
 
-		spinner = (ProgressBar)findViewById(R.id.progressBar);
-		spinner.setVisibility(View.GONE);
-
 		soundkitsDownloadFragment = new SoundkitsDownloadFragment();
 		getSupportFragmentManager().beginTransaction().add(R.id.soundkits_available_online_container, soundkitsDownloadFragment, "FRAGMENT_AVAILABLE_SOUNDKITS").commit();
 
 		soundkitDownloadedFragment = new SoundkitDownloadedFragment();
+		soundkitDownloadedFragment.setParent(this);
 		getSupportFragmentManager().beginTransaction().add(R.id.soundkits_downloaded_container, soundkitDownloadedFragment, "FRAGMENT_DOWNLOADED_SOUNDKITS").commit();
 	}
 
 	@Override
-	public void onProgress(int p)
+	public void onDownloadStart()
 	{
-		spinner.setVisibility(View.VISIBLE);
-		return; /* do nothing here yet, TODO: add code */
+		/* Show indicator */
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setMessage("Downloading files...");		//TODO: hardcoded string
+		progressDialog.show();
+	}
+
+	@Override
+	public void onDownloadProgress(int p)
+	{
+		progressDialog.setProgress(p);
 	}
 
 	@Override
@@ -62,9 +68,9 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 		/* Downloaded a list (initiated by requestDownload(..)) of (.wav) sounds into the result byte array list,
 		   Write the files onto the internal disk and create an entry in the database */
 
-		final ArrayList<DownloadSound> downloadedSounds = (ArrayList<DownloadSound>) result;
+		progressDialog.cancel();
 
-		spinner.setVisibility(View.GONE);
+		final ArrayList<DownloadSound> downloadedSounds = (ArrayList<DownloadSound>) result;
 
 		for(int b=0; b<downloadedSounds.size(); b++)
 		{
@@ -99,7 +105,14 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 					}
 				}
 			}, currentPath);
+
 		}
+	}
+
+	@Override
+	public void onDownloadCanceled()
+	{
+		progressDialog.cancel();
 	}
 
 
@@ -131,7 +144,9 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 				break;
 
 			case MESSAGE_TYPE_INSERT_SOUND_OK:
-				// TODO: notifyDatasetChanged on available sounds listview
+				break;
+
+			case MESSAGE_TYPE_DELETE_KIT_OK:
 				break;
 
 			case MESSAGE_TYPE_GET_SOUNDKITS:

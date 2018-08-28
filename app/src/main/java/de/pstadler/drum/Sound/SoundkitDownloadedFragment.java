@@ -9,20 +9,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.Arrays;
-
+import de.pstadler.drum.IChildFragment;
 import de.pstadler.drum.R;
-import de.pstadler.drum.SoundKitsActivity;
 
 
 public class SoundkitDownloadedFragment extends Fragment implements ISoundManager
 {
+	private IChildFragment parent;
 	private ExpandableListView listViewDownloadedKits;
 	private ArrayList<Soundkit> soundkits;
 	private SoundkitsDownloadedAdapter soundkitAdapter;
-
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -33,8 +31,15 @@ public class SoundkitDownloadedFragment extends Fragment implements ISoundManage
 		soundkitAdapter = new SoundkitsDownloadedAdapter(getActivity(), soundkits);
 
 		/* As the fragment is attached, inform the parent activity to download the soundkits */
-		String tag = getTag();
-		((SoundKitsActivity)getActivity()).onChildCreated(tag);
+		if(parent != null)
+		{
+			parent.onChildCreated(getTag());
+		}
+	}
+
+	public void setParent(IChildFragment parent)
+	{
+		this.parent = parent;
 	}
 
 	@NonNull
@@ -69,6 +74,5 @@ public class SoundkitDownloadedFragment extends Fragment implements ISoundManage
 				}
 			});
 		}
-
 	}
 }

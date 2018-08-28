@@ -15,6 +15,18 @@ public class HttpDownloadTaskSound extends AsyncTask<DownloadSound, Integer, Arr
 	}
 
 	@Override
+	protected void onPreExecute()
+	{
+		downloadListener.onDownloadStart();
+	}
+
+	@Override
+	protected void onCancelled()
+	{
+		downloadListener.onDownloadCanceled();
+	}
+
+	@Override
 	protected ArrayList<DownloadSound> doInBackground(DownloadSound... downloadSounds)
 	{
 		ArrayList<DownloadSound> result = new ArrayList<>();
@@ -51,6 +63,6 @@ public class HttpDownloadTaskSound extends AsyncTask<DownloadSound, Integer, Arr
 	@Override
 	protected void onProgressUpdate(Integer... values)
 	{
-		downloadListener.onProgress(values[0]);
+		downloadListener.onDownloadProgress(values[0]);
 	}
 }

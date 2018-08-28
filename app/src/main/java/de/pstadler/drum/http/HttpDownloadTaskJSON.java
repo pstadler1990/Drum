@@ -15,6 +15,12 @@ public class HttpDownloadTaskJSON extends AsyncTask<String, Integer, ArrayList<J
 	}
 
 	@Override
+	protected void onPreExecute()
+	{
+		downloadListener.onDownloadStart();
+	}
+
+	@Override
 	protected ArrayList<JSONArray> doInBackground(String... urls)
 	{
 		ArrayList<JSONArray> result = new ArrayList<>();
@@ -35,6 +41,12 @@ public class HttpDownloadTaskJSON extends AsyncTask<String, Integer, ArrayList<J
 	}
 
 	@Override
+	protected void onCancelled()
+	{
+		downloadListener.onDownloadCanceled();
+	}
+
+	@Override
 	protected void onPostExecute(ArrayList<JSONArray> jsonObjects)
 	{
 		downloadListener.onDownloadComplete(jsonObjects);
@@ -43,6 +55,6 @@ public class HttpDownloadTaskJSON extends AsyncTask<String, Integer, ArrayList<J
 	@Override
 	protected void onProgressUpdate(Integer... values)
 	{
-		downloadListener.onProgress(values[0]);
+		downloadListener.onDownloadProgress(values[0]);
 	}
 }

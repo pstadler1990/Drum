@@ -93,7 +93,9 @@ public class SoundkitsDownloadedAdapter extends BaseExpandableListAdapter
 		}
 
 		name.setText(soundkit.name);
-		elements.setText(soundkit.elements);
+
+		String numberOfElements = String.valueOf(soundkit.elements);
+		elements.setText(numberOfElements);
 
 		return v;
 	}
@@ -118,6 +120,6 @@ public class SoundkitsDownloadedAdapter extends BaseExpandableListAdapter
 	@Override
 	public boolean isChildSelectable(int groupPosition, int childPosition)
 	{
-		return true;
+		return false;
 	}
 }

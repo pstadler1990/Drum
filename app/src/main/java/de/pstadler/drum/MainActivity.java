@@ -20,7 +20,6 @@ import de.pstadler.drum.Track.TrackFragment;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener
 {
-    //Lorem ipsum
     public static final String TAG = "MainActivityLog";
     public static int pages = 0;
     private ViewPager viewPager;
