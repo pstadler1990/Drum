@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,9 +19,9 @@ import de.pstadler.drum.SoundKitsActivity;
 
 public class SoundkitDownloadedFragment extends Fragment implements ISoundManager
 {
-	private ListView listViewDownloadedKits;
+	private ExpandableListView listViewDownloadedKits;
 	private ArrayList<Soundkit> soundkits;
-	private SoundkitAdapter soundkitAdapter;
+	private SoundkitsDownloadedAdapter soundkitAdapter;
 
 
 	@Override
@@ -28,7 +30,7 @@ public class SoundkitDownloadedFragment extends Fragment implements ISoundManage
 		super.onCreate(savedInstanceState);
 
 		soundkits = new ArrayList<>();
-		soundkitAdapter = new SoundkitAdapter(getActivity(), soundkits);
+		soundkitAdapter = new SoundkitsDownloadedAdapter(getActivity(), soundkits);
 
 		/* As the fragment is attached, inform the parent activity to download the soundkits */
 		String tag = getTag();
@@ -42,7 +44,7 @@ public class SoundkitDownloadedFragment extends Fragment implements ISoundManage
 		View rootView = inflater.inflate(R.layout.fragment_downloaded_soundkits, container, false);
 
 		listViewDownloadedKits = rootView.findViewById(R.id.soundkits_list_kits);
-		listViewDownloadedKits.setAdapter(soundkitAdapter);
+		listViewDownloadedKits.setAdapter((ExpandableListAdapter)soundkitAdapter);
 
 		return rootView;
 	}

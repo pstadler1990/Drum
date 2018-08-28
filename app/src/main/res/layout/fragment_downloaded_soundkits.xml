@@ -12,10 +12,10 @@
         android:text="@string/soundkits_downloaded_kits"
         android:padding="20dp"/>
 
-    <ListView
+    <ExpandableListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/soundkits_list_kits">
-    </ListView>
+    </ExpandableListView>
 
 </LinearLayout>

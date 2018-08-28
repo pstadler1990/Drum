@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import de.pstadler.drum.R;
@@ -37,12 +36,12 @@ public class SoundkitAdapter extends ArrayAdapter<Soundkit> implements Serializa
 		if(v == null)
 		{
 			LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			v = vi.inflate(R.layout.soundkit_item, null);
+			v = vi.inflate(R.layout.soundkit_group, null);
 		}
 
-		ImageView icon = v.findViewById(R.id.soundkit_item_icon);
-		TextView name = v.findViewById(R.id.soundkit_item_name);
-		TextView elements = v.findViewById(R.id.soundkit_item_elements);
+		ImageView icon = v.findViewById(R.id.soundkit_group_icon);
+		TextView name = v.findViewById(R.id.soundkit_group_name);
+		TextView elements = v.findViewById(R.id.soundkit_group_elements);
 
 		Soundkit soundkit = soundkits.get(position);
 

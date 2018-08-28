@@ -45,6 +45,8 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 	@Override
 	public void onProgress(int p)
 	{
+		// loading bar text
+		//String percentageString = getString(R.string.httpdownloader_loading_percentage, (int)1);
 		return; /* do nothing here yet, TODO: add code */
 	}
 

@@ -11,6 +11,8 @@
     <string name="soundkits_available_kits">Available kits online</string>
     <string name="soundkits_downloaded_kits">Downloaded kits</string>
 
+    <string name="httpdownloader_loading_percentage">Downloaded %1$d \%.</string>
+
     <string name="res_sound_name_template">%1$s.wav</string>
     <string name="res_sound_root_file_raw">https://github.com/pstadler1990/Drum/blob/master/kits/%1$s?raw=true</string>
     <string name="res_sound_kitlist">https://raw.githubusercontent.com/pstadler1990/Drum/master/kits/kitlist.json</string>
