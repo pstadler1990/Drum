@@ -16,11 +16,14 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import de.pstadler.drum.Database.Sound;
 import de.pstadler.drum.DialogInstrument;
+import de.pstadler.drum.IChildFragment;
 import de.pstadler.drum.R;
+import de.pstadler.drum.Sound.ISoundSelected;
 
 
-public class TrackFragment extends Fragment implements View.OnClickListener
+public class TrackFragment extends Fragment implements View.OnClickListener, ISoundSelected
 {
     public static final String TAG = "TRACK";
     public static final int NUMBER_OF_BUTTONS = 8;
@@ -47,7 +50,6 @@ public class TrackFragment extends Fragment implements View.OnClickListener
             buttonStates = (tmpStates == null)? buttonStates : tmpStates;
             trackId = savedInstanceState.getInt("trackId");
             instrumentId = savedInstanceState.getInt("instrumentId");
-            Log.d(TAG, "onCreate -> savedInstanceState != null");
         }
 
         Bundle bundle = getArguments();
@@ -56,7 +58,6 @@ public class TrackFragment extends Fragment implements View.OnClickListener
             instrumentId = bundle.getInt("instrumentId");
             trackId = bundle.getInt("trackId");
             instrumentName = bundle.getString("instrumentName", Instrument.getInstrumentName(Instrument.INSTRUMENT_DEFAULT));
-            Log.d(TAG, "onCreate -> bundle != null");
         }
         else
         {
@@ -64,7 +65,6 @@ public class TrackFragment extends Fragment implements View.OnClickListener
             instrumentId = Instrument.INSTRUMENT_DEFAULT;
             trackId = -1;
             instrumentName = Instrument.getInstrumentName(Instrument.INSTRUMENT_DEFAULT);
-            Log.d(TAG, "onCreate -> bundle == null");
         }
     }
 
@@ -91,8 +91,6 @@ public class TrackFragment extends Fragment implements View.OnClickListener
 
         updateButtonStates();
 
-        Log.d(TAG, "onCreateView");
-
         return rootView;
     }
 
@@ -104,6 +102,7 @@ public class TrackFragment extends Fragment implements View.OnClickListener
             //TODO: Open dialog with a relative layout (50% SoundkitsDownloadFragment and 50% SoundsFragment) and a use selected sound button
 			/*This opens a dialog where the user can choose a sound from the downloaded kits*/
             DialogInstrument dialogInstrument = new DialogInstrument();
+            dialogInstrument.setTargetFragment(this, 1);
             dialogInstrument.show(getFragmentManager(), "Dialog");
             return;
         }
@@ -180,8 +179,13 @@ public class TrackFragment extends Fragment implements View.OnClickListener
         outState.putInt("instrumentId", instrumentId);
         outState.putBooleanArray("buttonStates", buttonStates);
 
-        Log.d(TAG, "onSaveInstanceState");
-
         super.onSaveInstanceState(outState);
     }
+
+	@Override
+	public void onSoundSelected(Sound sound)
+	{
+		/* Sound from DialogInstrument arrives here */
+		System.out.print(sound);
+	}
 }

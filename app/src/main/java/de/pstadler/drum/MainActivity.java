@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.pstadler.drum.Database.Sound;
+import de.pstadler.drum.Sound.ISoundSelected;
 import de.pstadler.drum.Track.BarFragment;
 import de.pstadler.drum.Track.Instrument;
 import de.pstadler.drum.Track.TrackFragment;
@@ -186,8 +188,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
-    /*Adapter for the pages (= bars); each page represents a single bar of the whole song*/
+	/*Adapter for the pages (= bars); each page represents a single bar of the whole song*/
     private class ScreenSlidePageAdapter extends FragmentStatePagerAdapter
     {
         public ScreenSlidePageAdapter(FragmentManager fm)

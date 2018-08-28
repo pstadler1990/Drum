@@ -10,6 +10,7 @@ import de.pstadler.drum.Database.DBHelper;
 import de.pstadler.drum.Database.IDBHandler;
 import de.pstadler.drum.Database.Sound;
 import de.pstadler.drum.FileAccess.FileAccessor;
+import de.pstadler.drum.Sound.ISoundSelected;
 import de.pstadler.drum.Sound.Soundkit;
 import de.pstadler.drum.Sound.SoundkitDownloadedFragment;
 import de.pstadler.drum.Sound.SoundkitsDownloadFragment;
@@ -43,7 +44,7 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 		getSupportFragmentManager().beginTransaction().add(R.id.soundkits_available_online_container, soundkitsDownloadFragment, "FRAGMENT_AVAILABLE_SOUNDKITS").commit();
 
 		soundkitDownloadedFragment = new SoundkitDownloadedFragment();
-		soundkitDownloadedFragment.setParent(this);
+		soundkitDownloadedFragment.setChildHandler(this);
 		getSupportFragmentManager().beginTransaction().add(R.id.soundkits_downloaded_container, soundkitDownloadedFragment, "FRAGMENT_DOWNLOADED_SOUNDKITS").commit();
 	}
 
