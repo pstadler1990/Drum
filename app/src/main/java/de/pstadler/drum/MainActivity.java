@@ -10,17 +10,23 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import de.pstadler.drum.Database.Sound;
 import de.pstadler.drum.Sound.ISoundSelected;
+import de.pstadler.drum.Sound.Playback.IClock;
+import de.pstadler.drum.Sound.Playback.PlaybackEngine;
+import de.pstadler.drum.Sound.Playback.Player;
 import de.pstadler.drum.Track.BarFragment;
 import de.pstadler.drum.Track.Instrument;
 import de.pstadler.drum.Track.TrackFragment;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,
+		IClock
 {
     public static final String TAG = "MainActivityLog";
     public static int pages = 0;
@@ -31,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button buttonAddPage;
     private ImageButton buttonPlayStop;
     protected ArrayList<BarFragment> barFragments;
+
+    private PlaybackEngine playbackEngine;
 
     private int tracks = 0;
     public static final int TRACKS_MAX = 15;
@@ -57,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         buttonAddTrack.setOnClickListener(this);
         buttonAddPage.setOnClickListener(this);
+        buttonPlayStop.setOnClickListener(this);
 
         // Create first page
         barFragments = new ArrayList<>();
@@ -68,6 +77,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         else
             createNewPage();
+
+        /* Create playback engine */
+        playbackEngine = new PlaybackEngine(5);	/* n = number of channels */
+		Player player = new Player();
+		Player player1 = new Player();
+		Player player2 = new Player();
+		playbackEngine.addPlayer(new Player[] {player, player1, player2});
+		playbackEngine.addPlayer(this);
     }
 
     private void createNewPage(int...pageNumber)
@@ -162,7 +179,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onBackPressed() {
         if (viewPager.getCurrentItem() == 0) {
             super.onBackPressed();
-        } else {
+        }
+        else {
             viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
         }
     }
@@ -185,8 +203,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.button_add_page:
                 createNewPage();
                 break;
+			case R.id.button_playstop:
+				playbackEngine.run();
+				break;
         }
     }
+
+	@Override
+	public void onClockUpdate(int barId)
+	{
+		/* TODO: Add gui update on playback clock update here */
+	}
 
 	/*Adapter for the pages (= bars); each page represents a single bar of the whole song*/
     private class ScreenSlidePageAdapter extends FragmentStatePagerAdapter

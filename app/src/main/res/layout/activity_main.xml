@@ -18,7 +18,7 @@
             android:layout_width="0dp"
             android:layout_weight=".25"
             android:layout_height="match_parent"
-            android:text=""
+            android:id="@+id/main_bar_number"
             android:textColor="@android:color/white"
             android:textSize="30dp"
             android:layout_gravity="center"/>

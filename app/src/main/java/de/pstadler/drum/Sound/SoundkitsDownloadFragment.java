@@ -76,6 +76,8 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, final int position, long id)
 			{
+				final Soundkit soundkit = (Soundkit) listViewAvailableKits.getItemAtPosition(position);
+
 				/* Show dialog to confirm the download of the selected soundkit */
 				AlertDialog dialog = new AlertDialog.Builder(getContext())
 						.setPositiveButton("Download kit", new DialogInterface.OnClickListener()	//TODO: string hardcoded
@@ -84,7 +86,6 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 							public void onClick(DialogInterface dialog, int which)
 							{						// TODO: hardcoded string
 								/* Requests the download of the selected kit from the github repository */
-								Soundkit soundkit = (Soundkit) listViewAvailableKits.getItemAtPosition(position);
 								if(soundkit != null)
 								{
 									DownloadSound[] downloadSounds = soundkit.downloadSounds.toArray(new DownloadSound[soundkit.downloadSounds.size()]);
@@ -102,6 +103,7 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 							}
 						})
 						.setTitle("Download soundkit?")													// TODO: hardcoded string
+						.setMessage(soundkit.name)
 						.create();
 
 				dialog.show();
