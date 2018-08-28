@@ -6,6 +6,11 @@
     tools:context=".SoundKitsActivity"
     android:weightSum="1"
     android:orientation="vertical">
+    
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"/>
 
     <LinearLayout
         android:layout_width="match_parent"
