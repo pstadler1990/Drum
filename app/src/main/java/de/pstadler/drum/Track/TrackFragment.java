@@ -34,6 +34,7 @@ public class TrackFragment extends Fragment implements View.OnClickListener, ISo
     private int trackId;
     private String instrumentName;
     private boolean[] buttonStates;
+    private Sound sound;
 
     public TrackFragment() { }
 
@@ -99,7 +100,6 @@ public class TrackFragment extends Fragment implements View.OnClickListener, ISo
     {
         if(v.getId() == R.id.instrument_name)
         {
-            //TODO: Open dialog with a relative layout (50% SoundkitsDownloadFragment and 50% SoundsFragment) and a use selected sound button
 			/*This opens a dialog where the user can choose a sound from the downloaded kits*/
             DialogInstrument dialogInstrument = new DialogInstrument();
             dialogInstrument.setTargetFragment(this, 1);
@@ -186,6 +186,7 @@ public class TrackFragment extends Fragment implements View.OnClickListener, ISo
 	public void onSoundSelected(Sound sound)
 	{
 		/* Sound from DialogInstrument arrives here */
-		System.out.print(sound);
+		this.sound = sound;
+		setInstrumentText(sound.name);
 	}
 }

@@ -2,6 +2,7 @@ package de.pstadler.drum.Sound;
 
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
     private ListView listViewAvailableKits;
     private ArrayList<Soundkit> soundkits;
     private SoundkitAdapter soundkitAdapter;
+	private ProgressDialog progressDialog;
 
 	@Override
     public void onCreate(Bundle savedInstanceState)
@@ -69,10 +71,10 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
         listViewAvailableKits = rootView.findViewById(R.id.soundkits_list_kits);
         listViewAvailableKits.setAdapter(soundkitAdapter);
         listViewAvailableKits.setLongClickable(true);
-        listViewAvailableKits.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+        listViewAvailableKits.setOnItemClickListener(new AdapterView.OnItemClickListener()
 		{
 			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id)
+			public void onItemClick(AdapterView<?> parent, View view, final int position, long id)
 			{
 				/* Show dialog to confirm the download of the selected soundkit */
 				AlertDialog dialog = new AlertDialog.Builder(getContext())
@@ -103,8 +105,6 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 						.create();
 
 				dialog.show();
-
-				return true;
 			}
 		});
 
@@ -114,26 +114,30 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 	@Override
 	public void onDownloadStart()
 	{
-
+		/* Show indicator */
+		progressDialog = new ProgressDialog(getContext());
+		progressDialog.setMessage("Downloading files...");		//TODO: hardcoded string
+		progressDialog.show();
 	}
 
 	@Override
 	public void onDownloadProgress(int p)
 	{
-		return;	/* We don't want to show a progress update here, as we're just downloading
-				   json files */
+		progressDialog.setProgress(p);
 	}
 
 	@Override
 	public void onDownloadCanceled()
 	{
-		return; /* TODO: implement */
+		progressDialog.dismiss();
 	}
 
 	@Override
 	public void onDownloadComplete(List<?> result)
 	{
 		ArrayList<JSONArray> jsonList = (ArrayList<JSONArray>)result;
+
+		progressDialog.dismiss();
 
 		/* Converts the downloaded JsonArray to soundkit files */
 		for(int i=0; i<jsonList.get(0).length(); i++)

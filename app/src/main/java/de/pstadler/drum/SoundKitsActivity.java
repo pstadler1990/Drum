@@ -69,7 +69,7 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 		/* Downloaded a list (initiated by requestDownload(..)) of (.wav) sounds into the result byte array list,
 		   Write the files onto the internal disk and create an entry in the database */
 
-		progressDialog.cancel();
+		progressDialog.dismiss();
 
 		final ArrayList<DownloadSound> downloadedSounds = (ArrayList<DownloadSound>) result;
 

@@ -11,8 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import de.pstadler.drum.Database.ISound;
 import de.pstadler.drum.Database.Sound;
 import de.pstadler.drum.IChildFragment;
 import de.pstadler.drum.R;
