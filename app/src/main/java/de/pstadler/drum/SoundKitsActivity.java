@@ -3,6 +3,9 @@ package de.pstadler.drum;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ProgressBar;
+
 import java.util.ArrayList;
 import java.util.List;
 import de.pstadler.drum.Database.DBHelper;
@@ -28,12 +31,16 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 {
 	private SoundkitsDownloadFragment soundkitsDownloadFragment;
 	private SoundkitDownloadedFragment soundkitDownloadedFragment;
+	private ProgressBar spinner;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sound_kits);
+
+		spinner = (ProgressBar)findViewById(R.id.progressBar);
+		spinner.setVisibility(View.GONE);
 
 		soundkitsDownloadFragment = new SoundkitsDownloadFragment();
 		getSupportFragmentManager().beginTransaction().add(R.id.soundkits_available_online_container, soundkitsDownloadFragment, "FRAGMENT_AVAILABLE_SOUNDKITS").commit();
@@ -45,8 +52,7 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 	@Override
 	public void onProgress(int p)
 	{
-		// loading bar text
-		//String percentageString = getString(R.string.httpdownloader_loading_percentage, (int)1);
+		spinner.setVisibility(View.VISIBLE);
 		return; /* do nothing here yet, TODO: add code */
 	}
 
@@ -57,6 +63,8 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 		   Write the files onto the internal disk and create an entry in the database */
 
 		final ArrayList<DownloadSound> downloadedSounds = (ArrayList<DownloadSound>) result;
+
+		spinner.setVisibility(View.GONE);
 
 		for(int b=0; b<downloadedSounds.size(); b++)
 		{
