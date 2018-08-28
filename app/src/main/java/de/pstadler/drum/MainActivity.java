@@ -10,14 +10,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.pstadler.drum.Database.Sound;
-import de.pstadler.drum.Sound.ISoundSelected;
 import de.pstadler.drum.Sound.Playback.IClock;
+import de.pstadler.drum.Sound.Playback.PlaybackArray;
+import de.pstadler.drum.Sound.Playback.PlaybackConverter;
 import de.pstadler.drum.Sound.Playback.PlaybackEngine;
 import de.pstadler.drum.Sound.Playback.Player;
 import de.pstadler.drum.Track.BarFragment;
@@ -204,15 +203,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 createNewPage();
                 break;
 			case R.id.button_playstop:
-				playbackEngine.run();
+				/* Preload the first bar */
+				BarFragment bar = (BarFragment) pagerAdapter.getItem(0);
+				PlaybackConverter.convertBarToArray(bar);
+
+				playbackEngine.startPlayback();
 				break;
         }
     }
 
 	@Override
-	public void onClockUpdate(int barId)
+	public void onClockUpdate(int barId, int stepId)
 	{
 		/* TODO: Add gui update on playback clock update here */
+
+		/* Convert all the tracks from the next bar into one big 1-dimensional array
+				   and pass each single array to the player instance */
+		if(stepId == (TrackFragment.NUMBER_OF_BUTTONS - 1))
+		{
+			if (barId < (pagerAdapter.getCount() - 1))
+			{
+				BarFragment bar = (BarFragment) pagerAdapter.getItem(barId + 1);
+				PlaybackArray[] playbackArrays = PlaybackConverter.convertBarToArray(bar);
+				// TODO: pass converted array to player instance
+			}
+			else {
+				playbackEngine.stopPlayback();
+				return;
+			}
+		}
 	}
 
 	/*Adapter for the pages (= bars); each page represents a single bar of the whole song*/

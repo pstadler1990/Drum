@@ -116,7 +116,12 @@ public class TrackFragment extends Fragment implements View.OnClickListener, ISo
         }
     }
 
-    private void ensureButtonStatesExist()
+	public Sound getSound()
+	{
+		return sound;
+	}
+
+	private void ensureButtonStatesExist()
     {
         buttonStates = (buttonStates == null)? new boolean[NUMBER_OF_BUTTONS] : buttonStates;
     }

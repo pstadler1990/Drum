@@ -11,7 +11,7 @@ public class Player implements IClock
 	}
 
 	@Override
-	public void onClockUpdate(int barId)
+	public void onClockUpdate(int barId, int stepId)
 	{
 		System.out.println("Beep (" + playerId + ") @ " + System.currentTimeMillis());
 	}
