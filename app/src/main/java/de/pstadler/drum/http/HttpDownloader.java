@@ -66,8 +66,4 @@ public class HttpDownloader
 
 		return null;
 	}
-
-	/*TODO: Add HttpDownloadSample class for downloading the music files from a kit */
-
-
 }

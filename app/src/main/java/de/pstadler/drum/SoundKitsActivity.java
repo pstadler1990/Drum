@@ -124,7 +124,7 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 			case MESSAGE_TYPE_GET_SOUNDS:
 				Sound[] sounds = (Sound[])message.getData().getParcelableArray("getSounds");
 
-				/* Add the sounds to the soundkitdownloaded fragment's listview
+				/* Add the sounds to the SoundkitDownloadedFragment's listview
 				and call notifyDatasetChanged()! */
 				Soundkit[] soundkitArray = DBHelper.createSoundkitsFromSounds(sounds);
 				soundkitDownloadedFragment.onSoundkitAdd(soundkitArray);
@@ -135,7 +135,7 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 				break;
 
 			case MESSAGE_TYPE_GET_SOUNDKITS:
-				/* Add the sounds to the soundkitdownloadedfragment's listview
+				/* Add the sounds to the SoundkitDownloadedFragment's listview
 				and call notifyDatasetChanged()! */
 				Soundkit[] soundkitsDownloaded = (Soundkit[]) message.getData().getSerializable("getSounds");
 				soundkitDownloadedFragment.onSoundkitAdd(soundkitsDownloaded);
