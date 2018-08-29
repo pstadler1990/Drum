@@ -6,6 +6,9 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -27,17 +30,15 @@ import de.pstadler.drum.Track.TrackFragment;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, IClock
 {
     public static final String TAG = "MainActivityLog";
+	public static final int TRACKS_MAX = 15;
     public static int pages = 0;
+	private int tracks = 0;
     private ViewPager viewPager;
     private ScreenSlidePageAdapter pagerAdapter;
     private LinearLayout mainAppbar;
-    private Button buttonAddTrack;
-    private Button buttonAddPage;
     private ImageButton buttonPlayStop;
     protected ArrayList<BarFragment> barFragments;
     private PlaybackEngine playbackEngine;
-    private int tracks = 0;
-    public static final int TRACKS_MAX = 15;
 
 
     @Override
@@ -48,8 +49,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         viewPager = findViewById(R.id.bars_viewpager);
         mainAppbar = findViewById(R.id.main_appbar);
-        buttonAddTrack = findViewById(R.id.button_add_track);
-        buttonAddPage = findViewById(R.id.button_add_page);
         buttonPlayStop = findViewById(R.id.button_playstop);
 
         mainAppbar.setElevation(getResources().getDimension(R.dimen.app_main_topbar_elevation));
@@ -59,8 +58,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         getSupportActionBar().setElevation(0);
 
-        buttonAddTrack.setOnClickListener(this);
-        buttonAddPage.setOnClickListener(this);
         buttonPlayStop.setOnClickListener(this);
 
         // Create first page
@@ -78,7 +75,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         playbackEngine = new PlaybackEngine(TRACKS_MAX, this);	/* n = number of channels */
     }
 
-    private void createNewPage(int...pageNumber)
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		MenuInflater menuInflater = getMenuInflater();
+		menuInflater.inflate(R.menu.menu_mainactivity, menu);
+		return true;
+	}
+
+	private void createNewPage(int...pageNumber)
     {
         int n = (pageNumber.length > 0)? pageNumber[0] : 1;
 
@@ -188,12 +193,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         switch(v.getId())
         {
-            case R.id.button_add_track:
-                createNewTrackSynchronized();
-                break;
-            case R.id.button_add_page:
-                createNewPage();
-                break;
 			case R.id.button_playstop:
 				/* Preload the first bar */
 				BarFragment bar = (BarFragment) pagerAdapter.getItem(0);
@@ -225,6 +224,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 				break;
         }
     }
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch(item.getItemId())
+		{
+			case R.id.menu_main_add_page:
+				createNewPage();
+				break;
+			case R.id.menu_main_add_track:
+				createNewTrackSynchronized();
+				break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 
 	@Override
 	public void onClockUpdate(int barId, int stepId)

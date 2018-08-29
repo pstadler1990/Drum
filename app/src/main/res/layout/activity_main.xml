@@ -7,44 +7,43 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/main_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/colorAccent"
+        android:clipToPadding="false"
+        android:elevation="5dp"
         android:padding="@dimen/app_main_topbar_padding"
-        android:background="@color/colorPrimaryDark"
+        android:paddingBottom="5dp"
         android:weightSum="1">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight=".25"
-            android:layout_height="match_parent"
-            android:id="@+id/main_bar_number"
-            android:textColor="@android:color/white"
-            android:textSize="30dp"
-            android:layout_gravity="center"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight=".25"
-            android:background="@drawable/ic_play"
-            android:scaleType="centerInside"
-            android:id="@+id/button_playstop"/>
+            <TextView
+                android:id="@+id/main_bar_number"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight=".25"
+                android:textColor="@android:color/white"
+                android:textSize="30dp" />
 
-        <Button
-            android:id="@+id/button_add_track"
-            android:layout_width="0dp"
-            android:layout_weight=".25"
-            android:layout_height="match_parent"
-            android:text="Add track" />
+            <ImageButton
+                android:id="@+id/button_playstop"
+                android:layout_width="57dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_weight=".25"
+                android:background="@drawable/ic_play"
+                android:backgroundTint="@color/colorWhite"
+                android:hapticFeedbackEnabled="true"
+                android:scaleType="matrix"
+                android:soundEffectsEnabled="true" />
 
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight=".25"
-            android:layout_height="match_parent"
-            android:id="@+id/button_add_page"
-            android:text="Add page"/>
-
+        </RelativeLayout>
 
     </LinearLayout>
 
