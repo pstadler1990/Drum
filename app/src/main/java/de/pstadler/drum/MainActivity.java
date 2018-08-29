@@ -24,8 +24,7 @@ import de.pstadler.drum.Track.Instrument;
 import de.pstadler.drum.Track.TrackFragment;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener,
-		IClock
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, IClock
 {
     public static final String TAG = "MainActivityLog";
     public static int pages = 0;
@@ -36,9 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button buttonAddPage;
     private ImageButton buttonPlayStop;
     protected ArrayList<BarFragment> barFragments;
-
     private PlaybackEngine playbackEngine;
-
     private int tracks = 0;
     public static final int TRACKS_MAX = 15;
 
@@ -223,6 +220,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 					}
 				}
 				playbackEngine.startPlayback();
+				buttonPlayStop.setClickable(false);
 				//TODO: Lock play button and change icon to stop / pause
 				break;
         }
@@ -249,9 +247,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 					players[i].preparePlayback(playbackArrays[i]);
 				}
 			}
-			else {
+			else
+			{
 				playbackEngine.stopPlayback();
 				//TODO: Unlock play button again and change back to play icon
+				buttonPlayStop.setClickable(true);
 				return;
 			}
 		}

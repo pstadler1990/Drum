@@ -39,8 +39,6 @@ public class Player extends MediaPlayer implements IClock
 	{
 		if(playbackArray.getPlaybackArray()[stepId])
 		{
-			System.out.println(playbackArray.getSound().name + "(" + playerId + ") B: " +barId +" S: " +stepId + " @ " + System.currentTimeMillis());
-
 			start();
 		}
 	}

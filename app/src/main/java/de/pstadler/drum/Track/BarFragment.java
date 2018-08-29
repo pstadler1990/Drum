@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import java.util.List;
 
 import de.pstadler.drum.R;
+import de.pstadler.drum.Sound.Playback.IClock;
 
 
 public class BarFragment extends Fragment implements ITrackListener

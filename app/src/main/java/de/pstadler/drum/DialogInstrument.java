@@ -86,8 +86,8 @@ public class DialogInstrument extends DialogFragment implements IChildFragment, 
 			case MESSAGE_TYPE_GET_SOUNDKITS:
 				/* Add the sounds to the SoundkitDownloadedFragment's listview
 				and call notifyDatasetChanged()! */
-				Soundkit[] soundkitsDownloaded = (Soundkit[]) message.getData().getSerializable("getSounds");
-				soundkitDownloadedFragment.onSoundkitAdd(soundkitsDownloaded);
+				Soundkit[] soundkitsDownloaded = (Soundkit[]) message.getData().getSerializable("getSoundkits");
+				soundkitDownloadedFragment.onSoundkitRefresh(soundkitsDownloaded);
 				break;
 		}
 	}

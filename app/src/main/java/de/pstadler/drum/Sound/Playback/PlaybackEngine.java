@@ -10,7 +10,7 @@ import static de.pstadler.drum.Track.TrackFragment.NUMBER_OF_BUTTONS;
 
 public class PlaybackEngine extends ScheduledThreadPoolExecutor
 {
-	private IClock listenerActivity;
+	private ArrayList<IClock> listeners;
 	private ArrayList<Player> players;
 	private int bpm = 80;					// TODO: User must be able to set the bpm from the UI
 	private int currentBarNumber = 0;
@@ -19,11 +19,20 @@ public class PlaybackEngine extends ScheduledThreadPoolExecutor
 	static ScheduledFuture<?> t;
 	private boolean stopProcess = false;
 
-	public PlaybackEngine(int corePoolSize, IClock listenerActivity)
+	/* Initialize a PlaybackEngine with corePoolSize threads,
+	   You can pass listeners of type IClock => those listeners are not returned as players,
+	   but they can attach to the onClockUpdate trigger that is fired by the PlaybackEngine */
+	public PlaybackEngine(int corePoolSize, IClock...listeners)
 	{
 		super(corePoolSize);
 		this.players = new ArrayList<>();
-		this.listenerActivity = listenerActivity;
+		this.listeners = new ArrayList<>();
+		addListener(listeners);
+	}
+
+	public void addListener(IClock...listeners)
+	{
+		this.listeners.addAll(Arrays.asList(listeners));
 	}
 
 	public void addPlayer(Player...players)
@@ -52,14 +61,16 @@ public class PlaybackEngine extends ScheduledThreadPoolExecutor
 				}
 				else
 				{
-					for (IClock player : players) {
+					for (Player player : players) {
 						player.onClockUpdate(currentBarNumber, currentStepNumber);
 					}
-					listenerActivity.onClockUpdate(currentBarNumber, currentStepNumber);
+					for(IClock listener : listeners) {
+						listener.onClockUpdate(currentBarNumber, currentStepNumber);
+					}
 
 					if (currentStepNumber++ >= numberOfSteps)
 					{
-						currentBarNumber++;    //TODO: check against real track bar count
+						currentBarNumber++;
 						currentStepNumber = 0;
 					}
 				}

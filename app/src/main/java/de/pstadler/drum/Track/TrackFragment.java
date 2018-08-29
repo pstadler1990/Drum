@@ -1,5 +1,6 @@
 package de.pstadler.drum.Track;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import de.pstadler.drum.Database.Sound;
 import de.pstadler.drum.DialogInstrument;
 import de.pstadler.drum.R;
 import de.pstadler.drum.Sound.ISoundSelected;
+import de.pstadler.drum.Sound.Playback.IClock;
 
 
 public class TrackFragment extends Fragment implements View.OnClickListener, ISoundSelected

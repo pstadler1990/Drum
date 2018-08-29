@@ -145,16 +145,18 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 				break;
 
 			case MESSAGE_TYPE_INSERT_SOUND_OK:
+				((App) getApplicationContext()).getDatabase().getSoundkits(this);
 				break;
 
 			case MESSAGE_TYPE_DELETE_KIT_OK:
+				((App) getApplicationContext()).getDatabase().getSoundkits(this);
 				break;
 
 			case MESSAGE_TYPE_GET_SOUNDKITS:
 				/* Add the sounds to the SoundkitDownloadedFragment's listview
 				and call notifyDatasetChanged()! */
-				Soundkit[] soundkitsDownloaded = (Soundkit[]) message.getData().getSerializable("getSounds");
-				soundkitDownloadedFragment.onSoundkitAdd(soundkitsDownloaded);
+				Soundkit[] soundkitsDownloaded = (Soundkit[]) message.getData().getSerializable("getSoundkits");
+				soundkitDownloadedFragment.onSoundkitRefresh(soundkitsDownloaded);
 				break;
 		}
 	}

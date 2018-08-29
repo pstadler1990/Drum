@@ -80,7 +80,7 @@ public class DB
 				Message message = new Message();
 				Bundle bundle = new Bundle();
 
-				bundle.putParcelableArray("getSounds", soundkits);		//TODO: hard coded string
+				bundle.putParcelableArray("getSoundkits", soundkits);		//TODO: hard coded string
 				message.what = MESSAGE_TYPE_GET_SOUNDKITS;
 				message.setData(bundle);
 

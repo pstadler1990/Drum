@@ -16,9 +16,7 @@ public class Soundkit implements Parcelable
 	public ArrayList<DownloadSound> downloadSounds;
 	public int elements;
 
-	public Soundkit()
-	{
-	}
+	public Soundkit() { }
 
 	protected Soundkit(Parcel in)
 	{
