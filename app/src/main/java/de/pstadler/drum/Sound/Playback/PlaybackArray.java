@@ -6,7 +6,7 @@ import de.pstadler.drum.Database.Sound;
 public class PlaybackArray
 {
 	private Sound sound;
-	private boolean[] playbackArray;
+	public boolean[] playbackArray;
 
 	public PlaybackArray(Sound sound, boolean[] playbackArray)
 	{

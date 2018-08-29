@@ -1,6 +1,5 @@
 package de.pstadler.drum.Track;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,28 +8,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.util.ArrayList;
 import de.pstadler.drum.Database.Sound;
 import de.pstadler.drum.DialogInstrument;
 import de.pstadler.drum.R;
 import de.pstadler.drum.Sound.ISoundSelected;
-import de.pstadler.drum.Sound.Playback.IClock;
 
 
 public class TrackFragment extends Fragment implements View.OnClickListener, ISoundSelected
 {
-    public static final String TAG = "TRACK";
+	public static final String TRACK_DEFAULT_NAME = "empty"; 	// TODO: hard coded string
     public static final int NUMBER_OF_BUTTONS = 8;
-    private LinearLayout buttonContainer;
     private TextView instrumentTextView;
     private ArrayList<Button> buttons = new ArrayList<>();
-    private int instrumentId;
-    private int trackId;
+	private Sound sound;
     private String instrumentName;
     private boolean[] buttonStates;
-    private Sound sound;
+	private int trackId;
+
 
     public TrackFragment() { }
 
@@ -39,6 +35,8 @@ public class TrackFragment extends Fragment implements View.OnClickListener, ISo
     {
         super.onCreate(savedInstanceState);
 
+		Bundle bundle = getArguments();
+
         buttonStates = new boolean[NUMBER_OF_BUTTONS];
 
         if(savedInstanceState != null)
@@ -46,22 +44,23 @@ public class TrackFragment extends Fragment implements View.OnClickListener, ISo
             boolean[] tmpStates = savedInstanceState.getBooleanArray("buttonStates");
             buttonStates = (tmpStates == null)? buttonStates : tmpStates;
             trackId = savedInstanceState.getInt("trackId");
-            instrumentId = savedInstanceState.getInt("instrumentId");
-        }
+            sound = savedInstanceState.getParcelable("sound");
 
-        Bundle bundle = getArguments();
-        if(bundle != null)
+			instrumentName = (sound != null) ? sound.name : TRACK_DEFAULT_NAME;
+        }
+        else if(bundle != null)
         {
-            instrumentId = bundle.getInt("instrumentId");
+            sound = bundle.getParcelable("sound");
             trackId = bundle.getInt("trackId");
-            instrumentName = bundle.getString("instrumentName", Instrument.getInstrumentName(Instrument.INSTRUMENT_DEFAULT));
+
+            instrumentName = (sound != null) ? sound.name : TRACK_DEFAULT_NAME;
         }
         else
         {
             /*Default instrument*/
-            instrumentId = Instrument.INSTRUMENT_DEFAULT;
             trackId = -1;
-            instrumentName = Instrument.getInstrumentName(Instrument.INSTRUMENT_DEFAULT);
+            instrumentName = TRACK_DEFAULT_NAME;
+            sound = null;
         }
     }
 
@@ -71,7 +70,6 @@ public class TrackFragment extends Fragment implements View.OnClickListener, ISo
     {
         View rootView = inflater.inflate(R.layout.fragment_track, container, false);
 
-        buttonContainer = rootView.findViewById(R.id.track_button_container);
         instrumentTextView = rootView.findViewById(R.id.instrument_name);
 
         setInstrumentText(instrumentName);
@@ -138,11 +136,6 @@ public class TrackFragment extends Fragment implements View.OnClickListener, ISo
         return instrumentTextView.getText().toString();
     }
 
-    public int getInstrumentId()
-    {
-        return instrumentId;
-    }
-
     public int getTrackId()
     {
         return trackId;
@@ -173,11 +166,11 @@ public class TrackFragment extends Fragment implements View.OnClickListener, ISo
         updateButtonStates();
     }
 
-    @Override
+	@Override
     public void onSaveInstanceState(@NonNull Bundle outState)
     {
         outState.putInt("trackId", trackId);
-        outState.putInt("instrumentId", instrumentId);
+        outState.putParcelable("sound", sound);
         outState.putBooleanArray("buttonStates", buttonStates);
 
         super.onSaveInstanceState(outState);

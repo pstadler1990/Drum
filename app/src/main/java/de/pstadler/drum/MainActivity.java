@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.pstadler.drum.Database.Sound;
 import de.pstadler.drum.Sound.Playback.IClock;
 import de.pstadler.drum.Sound.Playback.PlaybackArray;
 import de.pstadler.drum.Sound.Playback.PlaybackConverter;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Create first page
         barFragments = new ArrayList<>();
+        pages = 0;
 
         if(savedInstanceState != null)
         {
@@ -113,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 int curTracks = barFragment.getTrackCount();
                 if (curTracks + (trackCount - i) <= TRACKS_MAX)
                 {
-                    barFragment.onAddTrackListener(curTracks, Instrument.INSTRUMENT_DEFAULT);
+                    barFragment.onAddTrackListener(curTracks, null);
                     tracksCreated++;
                 }
             }
@@ -164,10 +166,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for(Fragment f : srcTracks)
         {
             TrackFragment tf = (TrackFragment)f;
-            String instrumentName = tf.getInstrumentText();
-            int instrumentId = tf.getInstrumentId();
+            Sound sound = tf.getSound();
             int trackId = tf.getTrackId();
-            dst.createNewTrack(trackId, instrumentId, instrumentName);
+            dst.createNewTrack(trackId, sound);
         }
     }
 
@@ -188,18 +189,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onSaveInstanceState(outState);
     }
 
-    @Override
+	@Override
     public void onClick(View v)
     {
         switch(v.getId())
         {
 			case R.id.button_playstop:
-				/* Preload the first bar */
-				BarFragment bar = (BarFragment) pagerAdapter.getItem(0);
-				PlaybackArray[] playbackArrays = PlaybackConverter.convertBarToArray(bar);
 
+				// TODO: add progress bar or change playback button to something spinning
+
+				/* Preload the whole song */
+				BarFragment[] bars = new BarFragment[pagerAdapter.getCount()];
+
+				ArrayList<PlaybackArray[]> playbackArrays = new ArrayList<>();
+
+				/* (BLOCKING) Activate each bar / page one after the other
+				   Collect track information and convert it via convertBarToArray
+				   Add the new track information to the playbackArrays list */
+				for(int p=0; p<bars.length; p++)
+				{
+					viewPager.setCurrentItem(p);
+					BarFragment fragment = (BarFragment) pagerAdapter.getItem(p);
+					while(fragment.isHidden());
+					PlaybackArray[] playbackArray = PlaybackConverter.convertBarToArray(fragment);
+
+					playbackArrays.add(playbackArray);
+				}
+
+				/* Combine the backbackArrays list (contains all PlayBackArrays of all tracks)
+				   to a single PlaybackArray per track */
+				PlaybackArray[] trackPlaybackArray = PlaybackConverter.convertPlaybackArrayListToPlaybackArrayForEachTrack(playbackArrays);
+
+				/* Create players if needed and preload the sound files */
 				int availablePlayers = playbackEngine.getPlayers().length;
-				int instrumentsInBar = bar.getTrackCount();
+				int instrumentsInBar = trackPlaybackArray.length;
 
 				if(availablePlayers < instrumentsInBar)
 				{
@@ -215,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 					for(int i=0; i<instrumentsInBar; i++)
 					{
-						players[i].preparePlayback(playbackArrays[i]);
+						players[i].preparePlayback(trackPlaybackArray[i]);
 					}
 				}
 				playbackEngine.startPlayback();
@@ -245,26 +268,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	{
 		/* TODO: Add gui update on playback clock update here */
 
-		/* Convert all the tracks from the next bar into one big 1-dimensional array
-				   and pass each single array to the player instance */
 		if(stepId == (TrackFragment.NUMBER_OF_BUTTONS - 1))
 		{
-			if (barId < (pagerAdapter.getCount() - 1))
-			{
-				BarFragment bar = (BarFragment) pagerAdapter.getItem(barId + 1);
-				PlaybackArray[] playbackArrays = PlaybackConverter.convertBarToArray(bar);
-
-				Player[] players = playbackEngine.getPlayers();
-
-				for(int i=0; i<pagerAdapter.getCount(); i++)
-				{
-					players[i].preparePlayback(playbackArrays[i]);
-				}
-			}
-			else
+			if (barId >= (pagerAdapter.getCount() - 1))
 			{
 				playbackEngine.stopPlayback();
+
 				//TODO: Unlock play button again and change back to play icon
+
 				buttonPlayStop.setClickable(true);
 				return;
 			}

@@ -1,6 +1,7 @@
 package de.pstadler.drum.Track;
 
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import java.util.List;
 
+import de.pstadler.drum.Database.Sound;
 import de.pstadler.drum.R;
 import de.pstadler.drum.Sound.Playback.IClock;
 
@@ -49,7 +51,7 @@ public class BarFragment extends Fragment implements ITrackListener
         return rootView;
     }
 
-    public boolean createNewTrack(int trackId, int instrumentId, String...instrumentName)
+	public boolean createNewTrack(int trackId, Sound sound)
     {
         android.support.v4.app.FragmentManager fragmentManager = getChildFragmentManager();
         if(fragmentManager != null)
@@ -58,9 +60,7 @@ public class BarFragment extends Fragment implements ITrackListener
 
             Bundle bundle = new Bundle();
             bundle.putInt("trackId", trackId);
-            bundle.putInt("instrumentId", instrumentId);
-            if(instrumentName.length > 0)
-                bundle.putString("instrumentName", instrumentName[0]);
+            bundle.putParcelable("sound", sound);
             trackFragment.setArguments(bundle);
 
             fragmentManager.beginTransaction().add(trackContainer.getId(), trackFragment).commit();
@@ -82,9 +82,9 @@ public class BarFragment extends Fragment implements ITrackListener
     }
 
     @Override
-    public void onAddTrackListener(int trackId, int instrumentId)
+    public void onAddTrackListener(int trackId, Sound sound)
     {
-        createNewTrack(trackId, instrumentId);
+        createNewTrack(trackId, sound);
     }
 
     private void restoreTrackInformation(Bundle bundle)
