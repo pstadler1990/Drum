@@ -15,7 +15,7 @@ public class PlaybackEngine extends ScheduledThreadPoolExecutor
 	private int bpm = 80;					// TODO: User must be able to set the bpm from the UI
 	private int currentBarNumber = 0;
 	private int currentStepNumber = 0;
-	private int numberOfSteps = NUMBER_OF_BUTTONS;
+	private int numberOfSteps = NUMBER_OF_BUTTONS - 1;
 	static ScheduledFuture<?> t;
 	private boolean stopProcess = false;
 

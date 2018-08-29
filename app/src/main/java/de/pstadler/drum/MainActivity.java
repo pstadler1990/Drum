@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,14 +35,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String TAG = "MainActivityLog";
 	public static final int TRACKS_MAX = 15;
     public static int pages = 0;
-	private int tracks = 0;
     private ViewPager viewPager;
     private ScreenSlidePageAdapter pagerAdapter;
     private LinearLayout mainAppbar;
     private ImageButton buttonPlayStop;
+    private TextView mainStepNumber;
+    private TextView mainBarNumber;
     protected ArrayList<BarFragment> barFragments;
     private PlaybackEngine playbackEngine;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -51,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         viewPager = findViewById(R.id.bars_viewpager);
         mainAppbar = findViewById(R.id.main_appbar);
         buttonPlayStop = findViewById(R.id.button_playstop);
+        mainBarNumber = findViewById(R.id.main_bar_number);
+        mainStepNumber = findViewById(R.id.main_step_number);
 
         mainAppbar.setElevation(getResources().getDimension(R.dimen.app_main_topbar_elevation));
 
@@ -125,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void createNewTrackSynchronized(int...trackCount)
     {
-        int tracksCreated = 0;
         int n = (trackCount.length > 0) ? trackCount[0] : 1;
 
         int backupCurrentPage = viewPager.getCurrentItem();
@@ -138,13 +141,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 BarFragment bf = barFragments.get(i);
                 int curTracks = bf.getTrackCount();
 
-                if (curTracks <= (curTracks + n))
-                {
-                    tracksCreated = createNewTrack(n, i);
+                if (curTracks <= (curTracks + n)) {
+                    createNewTrack(n, i);
                 }
             }
         }
-        tracks += tracksCreated;
 
         viewPager.setCurrentItem(backupCurrentPage);
     }
@@ -195,53 +196,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch(v.getId())
         {
 			case R.id.button_playstop:
+				mainStepNumber.setText("0");
+				mainBarNumber.setText("0");
 
-				// TODO: add progress bar or change playback button to something spinning
+				/* Prepare playback and play song */
+				preparePlayback();
 
-				/* Preload the whole song */
-				BarFragment[] bars = new BarFragment[pagerAdapter.getCount()];
-
-				ArrayList<PlaybackArray[]> playbackArrays = new ArrayList<>();
-
-				/* (BLOCKING) Activate each bar / page one after the other
-				   Collect track information and convert it via convertBarToArray
-				   Add the new track information to the playbackArrays list */
-				for(int p=0; p<bars.length; p++)
-				{
-					viewPager.setCurrentItem(p);
-					BarFragment fragment = (BarFragment) pagerAdapter.getItem(p);
-					while(fragment.isHidden());
-					PlaybackArray[] playbackArray = PlaybackConverter.convertBarToArray(fragment);
-
-					playbackArrays.add(playbackArray);
-				}
-
-				/* Combine the PlaybackArrays list (contains all PlayBackArrays of all tracks)
-				   to a single PlaybackArray per track */
-				PlaybackArray[] trackPlaybackArray = PlaybackConverter.convertPlaybackArrayListToPlaybackArrayForEachTrack(playbackArrays);
-
-				/* Create players if needed and preload the sound files */
-				int availablePlayers = playbackEngine.getPlayers().length;
-				int instrumentsInBar = trackPlaybackArray.length;
-
-				if(availablePlayers < instrumentsInBar)
-				{
-					int d = instrumentsInBar - availablePlayers;
-
-					for (int i=0; i<d; i++)
-					{
-						Player player = new Player();
-						playbackEngine.addPlayer(player);
-					}
-				}
-
-				Player[] players = playbackEngine.getPlayers();
-
-				for(int i=0; i<instrumentsInBar; i++)
-				{
-					players[i].preparePlayback(trackPlaybackArray[i]);
-				}
-
+				viewPager.setCurrentItem(0);
 				playbackEngine.startPlayback();
 
 				//TODO: Lock play button and change icon to stop / pause
@@ -249,6 +210,58 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 				break;
         }
     }
+
+    /* (BLOCKING) Prepare the song playback
+       Collects the track information from all bars / pages and converts them into a single
+       PlaybackArray per track
+       Creates audio players, if needed */
+    private void preparePlayback()
+	{
+		/* Preload the whole song */
+		BarFragment[] bars = new BarFragment[pagerAdapter.getCount()];
+
+		ArrayList<PlaybackArray[]> playbackArrays = new ArrayList<>();
+
+		/* (BLOCKING) Activate each bar / page one after the other
+		   Collect track information and convert it via convertBarToArray
+		   Add the new track information to the playbackArrays list */
+		for(int p=0; p<bars.length; p++)
+		{
+			viewPager.setCurrentItem(p);
+			BarFragment fragment = (BarFragment) pagerAdapter.getItem(p);
+			while(fragment.isHidden());
+			PlaybackArray[] playbackArray = PlaybackConverter.convertBarToArray(fragment);
+
+			playbackArrays.add(playbackArray);
+		}
+
+		/* Combine the PlaybackArrays list (contains all PlayBackArrays of all tracks)
+		   to a single PlaybackArray per track */
+		PlaybackArray[] trackPlaybackArray = PlaybackConverter.convertPlaybackArrayListToPlaybackArrayForEachTrack(playbackArrays);
+
+		/* Create players if needed */
+		int availablePlayers = playbackEngine.getPlayers().length;
+		int instrumentsInBar = trackPlaybackArray.length;
+
+		if(availablePlayers < instrumentsInBar)
+		{
+			int d = instrumentsInBar - availablePlayers;
+
+			for (int i=0; i<d; i++)
+			{
+				Player player = new Player();
+				playbackEngine.addPlayer(player);
+			}
+		}
+
+		/*  Preload the sound files */
+		Player[] players = playbackEngine.getPlayers();
+
+		for(int i=0; i<instrumentsInBar; i++)
+		{
+			players[i].preparePlayback(trackPlaybackArray[i]);
+		}
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
@@ -265,10 +278,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		return super.onOptionsItemSelected(item);
 	}
 
+	/* Listen to the PlayBackEngine's onClockUpdate event to control song playback and
+	   to update the user interface */
 	@Override
-	public void onClockUpdate(int barId, int stepId)
+	public void onClockUpdate(final int barId, final int stepId)
 	{
-		/* TODO: Add gui update on playback clock update here */
+		runOnUiThread(new Runnable()
+		{
+			@Override
+			public void run() {
+				mainStepNumber.setText(String.valueOf(stepId));
+			}
+		});
 
 		if(stepId == (TrackFragment.NUMBER_OF_BUTTONS - 1))
 		{
@@ -280,6 +301,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 				buttonPlayStop.setClickable(true);
 				return;
+			}
+			else
+			{
+				runOnUiThread(new Runnable()
+				{
+					@Override
+					public void run() {
+						mainBarNumber.setText(String.valueOf(barId + 1));
+					}
+				});
+				/* Follow the music playing flow => go to the next page if a new bar starts */
+				viewPager.setCurrentItem(barId + 1);
 			}
 		}
 	}

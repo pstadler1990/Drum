@@ -23,12 +23,36 @@
 
             <TextView
                 android:id="@+id/main_bar_number"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight=".25"
+                android:gravity="center_vertical"
+                android:text="0"
                 android:textColor="@android:color/white"
-                android:textSize="30dp" />
+                android:textSize="@dimen/text_size_larger" />
+
+            <TextView
+                android:id="@+id/main_step_divider"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_toEndOf="@+id/main_bar_number"
+                android:gravity="center_vertical"
+                android:text="|"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_larger" />
+
+            <TextView
+                android:id="@+id/main_step_number"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/main_step_divider"
+                android:gravity="center_vertical"
+                android:text="0"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_larger" />
 
             <ImageButton
                 android:id="@+id/button_playstop"
@@ -36,9 +60,9 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_weight=".25"
                 android:background="@drawable/ic_play"
                 android:backgroundTint="@color/colorWhite"
+                android:elevation="@dimen/app_main_topbar_elevation"
                 android:hapticFeedbackEnabled="true"
                 android:scaleType="matrix"
                 android:soundEffectsEnabled="true" />
