@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 					playbackArrays.add(playbackArray);
 				}
 
-				/* Combine the backbackArrays list (contains all PlayBackArrays of all tracks)
+				/* Combine the PlaybackArrays list (contains all PlayBackArrays of all tracks)
 				   to a single PlaybackArray per track */
 				PlaybackArray[] trackPlaybackArray = PlaybackConverter.convertPlaybackArrayListToPlaybackArrayForEachTrack(playbackArrays);
 
@@ -233,17 +233,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 						Player player = new Player();
 						playbackEngine.addPlayer(player);
 					}
-
-					Player[] players = playbackEngine.getPlayers();
-
-					for(int i=0; i<instrumentsInBar; i++)
-					{
-						players[i].preparePlayback(trackPlaybackArray[i]);
-					}
 				}
+
+				Player[] players = playbackEngine.getPlayers();
+
+				for(int i=0; i<instrumentsInBar; i++)
+				{
+					players[i].preparePlayback(trackPlaybackArray[i]);
+				}
+
 				playbackEngine.startPlayback();
-				buttonPlayStop.setClickable(false);
+
 				//TODO: Lock play button and change icon to stop / pause
+				buttonPlayStop.setClickable(false);
 				break;
         }
     }
