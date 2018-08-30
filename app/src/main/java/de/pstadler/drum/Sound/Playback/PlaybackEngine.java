@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ScheduledFuture;
 import de.pstadler.drum.Track.TrackFragment;
 
 
@@ -78,12 +77,10 @@ public class PlaybackEngine extends Timer
 						}
 						else
 						{
+							mainListenerClock.onBarComplete(currentBarNumber + 1);
 							currentBarNumber = 0;
 							currentStepNumber = -1;
 						}
-					}
-					else {
-						mainListenerClock.onBarComplete(currentBarNumber + 1);
 					}
 				}
 

@@ -333,7 +333,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 					}
 				});
 				/* Follow the music playing flow => go to the next page if a new bar starts */
-				viewPager.setCurrentItem(barId + 1);
+				//viewPager.setCurrentItem(barId + 1);
+				//TODO: while(fragment.isHidden()); crash if more than 3 pages!
 			}
 		}
 	}
@@ -379,7 +380,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 			}
 		});
 		/* Follow the music playing flow => go to the next page if a new bar starts */
-		viewPager.setCurrentItem(barId);
+		if(barId + 1 >= pagerAdapter.getCount()) {
+			viewPager.setCurrentItem(0);
+		}
+		else {
+			viewPager.setCurrentItem(barId + 1);
+		}
+
 	}
 
 	/*Adapter for the pages (= bars); each page represents a single bar of the whole song*/
