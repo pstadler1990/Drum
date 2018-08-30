@@ -60,7 +60,7 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/ic_play"
+                android:background="@drawable/button_playstop"
                 android:backgroundTint="@color/colorWhite"
                 android:elevation="@dimen/app_main_topbar_elevation"
                 android:hapticFeedbackEnabled="true"

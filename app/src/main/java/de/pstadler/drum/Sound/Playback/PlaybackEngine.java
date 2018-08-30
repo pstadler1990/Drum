@@ -1,5 +1,7 @@
 package de.pstadler.drum.Sound.Playback;
 
+import android.media.MediaPlayer;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ScheduledFuture;
@@ -51,13 +53,22 @@ public class PlaybackEngine extends ScheduledThreadPoolExecutor
 		currentBarNumber = 0;
 		currentStepNumber = 0;
 
+		for(IClock listener : listeners) {
+			listener.onStartPlayback();
+		}
+
 		t = scheduleAtFixedRate(new Runnable()
 		{
 			@Override
-			public void run()
+			synchronized public void run()
 			{
-				if(stopProcess) {
+				if(stopProcess)
+				{
 					t.cancel(true);
+
+					for(IClock listener : listeners) {
+						listener.onStopPlayback();
+					}
 				}
 				else
 				{
@@ -83,4 +94,9 @@ public class PlaybackEngine extends ScheduledThreadPoolExecutor
 		stopProcess = true;
 	}
 
+	public void resetPlayback()
+	{
+		currentStepNumber = -1;
+		currentBarNumber = 0;
+	}
 }

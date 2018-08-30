@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/menu_main_add_track" android:title="Add track"></item>
-    <item android:id="@+id/menu_main_add_page" android:title="Add page"></item>
+    <group android:id="@+id/menu_main_group_tracks">
+        <item android:id="@+id/menu_main_add_track" android:title="Add track"></item>
+        <item android:id="@+id/menu_main_add_page" android:title="Add page"></item>
+    </group>
 
+    <group android:id="@+id/menu_main_group_settings" android:checkableBehavior="single">
+        <item android:id="@+id/menu_main_loop_enable" android:title="Loop" android:checkable="true"></item>
+    </group>
 </menu>

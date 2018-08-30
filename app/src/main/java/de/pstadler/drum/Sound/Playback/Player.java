@@ -8,7 +8,6 @@ public class Player extends MediaPlayer implements IClock
 {
 	static int players = 0;
 	private int playerId;
-
 	private boolean readyForPlayback = false;
 	private PlaybackArray playbackArray;
 
@@ -20,15 +19,19 @@ public class Player extends MediaPlayer implements IClock
 	public void preparePlayback(PlaybackArray playbackArray)
 	{
 		reset();
-		readyForPlayback = false;
+		readyForPlayback = true;
 
 		this.playbackArray = playbackArray;
 		try
 		{
+			if(playbackArray == null || playbackArray.getSound() == null)
+			{
+				readyForPlayback = false;
+				return;
+			}
 			/* (BLOCKING) Preload the file from the sound path */
 			setDataSource(playbackArray.getSound().path);
 			prepare();
-			readyForPlayback = true;
 		}
 		catch (IOException e) {
 			e.printStackTrace();
@@ -42,5 +45,18 @@ public class Player extends MediaPlayer implements IClock
 		{
 			start();
 		}
+	}
+
+	@Override
+	public void onStartPlayback()
+	{
+		/* nothing to do here .. */
+	}
+
+	@Override
+	public void onStopPlayback()
+	{
+		stop();
+		readyForPlayback = false;
 	}
 }

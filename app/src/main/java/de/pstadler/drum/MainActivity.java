@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String TAG = "MainActivityLog";
 	public static final int TRACKS_MAX = 15;
     public static int pages = 0;
+    private boolean loopPlayback = false;
+    private boolean isPlaying = false;
     private ViewPager viewPager;
     private ScreenSlidePageAdapter pagerAdapter;
     private LinearLayout mainAppbar;
@@ -196,17 +198,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch(v.getId())
         {
 			case R.id.button_playstop:
-				mainStepNumber.setText("0");
-				mainBarNumber.setText("0");
 
-				/* Prepare playback and play song */
-				preparePlayback();
+				if(isPlaying)
+				{
+					playbackEngine.stopPlayback();
+				}
+				else
+				{
+					/* Prepare playback and play song */
+					preparePlayback();
 
-				viewPager.setCurrentItem(0);
-				playbackEngine.startPlayback();
-
-				//TODO: Lock play button and change icon to stop / pause
-				buttonPlayStop.setClickable(false);
+					viewPager.setCurrentItem(0);
+					playbackEngine.startPlayback();
+				}
 				break;
         }
     }
@@ -269,11 +273,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		switch(item.getItemId())
 		{
 			case R.id.menu_main_add_page:
-				createNewPage();
+				/* */
+				if(!isPlaying) {
+					createNewPage();
+				}
 				break;
 			case R.id.menu_main_add_track:
-				createNewTrackSynchronized();
+				/* */
+				if(!isPlaying) {
+					createNewTrackSynchronized();
+				}
 				break;
+			case R.id.menu_main_loop_enable:
+				/* */
+				if(item.isChecked()) {
+					loopPlayback = false;
+					item.setChecked(false);
+				} else {
+					loopPlayback = true;
+					item.setChecked(true);
+				}
+				break;
+
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -295,12 +316,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		{
 			if (barId >= (pagerAdapter.getCount() - 1))
 			{
-				playbackEngine.stopPlayback();
-
-				//TODO: Unlock play button again and change back to play icon
-
-				buttonPlayStop.setClickable(true);
-				return;
+				if(!loopPlayback)
+				{
+					playbackEngine.stopPlayback();
+					return;
+				}
+				else {
+					playbackEngine.resetPlayback();
+					runOnUiThread(new Runnable()
+					{
+						@Override
+						public void run() {
+							mainBarNumber.setText(String.valueOf("0"));
+							mainStepNumber.setText(String.valueOf("7"));
+						}
+					});
+				}
 			}
 			else
 			{
@@ -315,6 +346,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 				viewPager.setCurrentItem(barId + 1);
 			}
 		}
+	}
+
+	@Override
+	public void onStartPlayback()
+	{
+		isPlaying = true;
+		runOnUiThread(new Runnable()
+		{
+			@Override
+			public void run() {
+				buttonPlayStop.setActivated(true);
+			}
+		});
+
+	}
+
+	@Override
+	public void onStopPlayback()
+	{
+		isPlaying = false;
+		runOnUiThread(new Runnable()
+		{
+			@Override
+			public void run() {
+				buttonPlayStop.setActivated(false);
+				mainStepNumber.setText("0");
+				mainBarNumber.setText("0");
+			}
+		});
+
 	}
 
 	/*Adapter for the pages (= bars); each page represents a single bar of the whole song*/
