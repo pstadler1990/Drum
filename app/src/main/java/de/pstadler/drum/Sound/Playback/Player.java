@@ -1,25 +1,18 @@
 package de.pstadler.drum.Sound.Playback;
 
 import android.media.MediaPlayer;
-
 import java.io.IOException;
+
 
 public class Player extends MediaPlayer implements IClock
 {
-	static int players = 0;
-	private int playerId;
+	private PlaybackEngine playbackEngine;
 	private boolean readyForPlayback = false;
 	private PlaybackArray playbackArray;
-
-	public Player()
-	{
-		playerId = players++;
-	}
 
 	public void preparePlayback(PlaybackArray playbackArray)
 	{
 		reset();
-		readyForPlayback = true;
 
 		this.playbackArray = playbackArray;
 		try
@@ -32,6 +25,7 @@ public class Player extends MediaPlayer implements IClock
 			/* (BLOCKING) Preload the file from the sound path */
 			setDataSource(playbackArray.getSound().path);
 			prepare();
+			readyForPlayback = true;
 		}
 		catch (IOException e) {
 			e.printStackTrace();
@@ -48,15 +42,5 @@ public class Player extends MediaPlayer implements IClock
 	}
 
 	@Override
-	public void onStartPlayback()
-	{
-		/* nothing to do here .. */
-	}
-
-	@Override
-	public void onStopPlayback()
-	{
-		stop();
-		readyForPlayback = false;
-	}
+	public void onBarComplete(int barId) { }
 }

@@ -10,27 +10,23 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import de.pstadler.drum.Database.Sound;
 import de.pstadler.drum.Sound.Playback.IClock;
+import de.pstadler.drum.Sound.Playback.IPlaybackControl;
 import de.pstadler.drum.Sound.Playback.PlaybackArray;
 import de.pstadler.drum.Sound.Playback.PlaybackConverter;
 import de.pstadler.drum.Sound.Playback.PlaybackEngine;
 import de.pstadler.drum.Sound.Playback.Player;
 import de.pstadler.drum.Track.BarFragment;
-import de.pstadler.drum.Track.Instrument;
 import de.pstadler.drum.Track.TrackFragment;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, IClock
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, IClock, IPlaybackControl
 {
     public static final String TAG = "MainActivityLog";
 	public static final int TRACKS_MAX = 15;
@@ -80,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             createNewPage();
 
         /* Create playback engine */
-        playbackEngine = new PlaybackEngine(TRACKS_MAX, this);	/* n = number of channels */
+        playbackEngine = new PlaybackEngine(this);	/* n = number of channels */
     }
 
 	@Override
@@ -209,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 					preparePlayback();
 
 					viewPager.setCurrentItem(0);
-					playbackEngine.startPlayback();
+					playbackEngine.startPlayback(pagerAdapter.getCount(), loopPlayback);
 				}
 				break;
         }
@@ -222,14 +218,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void preparePlayback()
 	{
 		/* Preload the whole song */
-		BarFragment[] bars = new BarFragment[pagerAdapter.getCount()];
-
 		ArrayList<PlaybackArray[]> playbackArrays = new ArrayList<>();
 
 		/* (BLOCKING) Activate each bar / page one after the other
 		   Collect track information and convert it via convertBarToArray
 		   Add the new track information to the playbackArrays list */
-		for(int p=0; p<bars.length; p++)
+		for(int p=0; p<pagerAdapter.getCount(); p++)
 		{
 			viewPager.setCurrentItem(p);
 			BarFragment fragment = (BarFragment) pagerAdapter.getItem(p);
@@ -316,17 +310,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		{
 			if (barId >= (pagerAdapter.getCount() - 1))
 			{
-				if(!loopPlayback)
+				if (loopPlayback)
 				{
-					playbackEngine.stopPlayback();
-					return;
-				}
-				else {
-					playbackEngine.resetPlayback();
 					runOnUiThread(new Runnable()
 					{
 						@Override
-						public void run() {
+						public void run()
+						{
 							mainBarNumber.setText(String.valueOf("0"));
 							mainStepNumber.setText(String.valueOf("7"));
 						}
@@ -376,6 +366,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 			}
 		});
 
+	}
+
+	@Override
+	public void onBarComplete(final int barId)
+	{
+		runOnUiThread(new Runnable()
+		{
+			@Override
+			public void run() {
+				mainBarNumber.setText(String.valueOf(barId));
+			}
+		});
+		/* Follow the music playing flow => go to the next page if a new bar starts */
+		viewPager.setCurrentItem(barId);
 	}
 
 	/*Adapter for the pages (= bars); each page represents a single bar of the whole song*/

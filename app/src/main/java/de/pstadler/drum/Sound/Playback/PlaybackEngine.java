@@ -1,40 +1,34 @@
 package de.pstadler.drum.Sound.Playback;
 
-import android.media.MediaPlayer;
-
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import static de.pstadler.drum.Track.TrackFragment.NUMBER_OF_BUTTONS;
+import de.pstadler.drum.Track.TrackFragment;
 
 
-public class PlaybackEngine extends ScheduledThreadPoolExecutor
+public class PlaybackEngine extends Timer
 {
-	private ArrayList<IClock> listeners;
+	private IClock mainListenerClock;
+	private IPlaybackControl mainListenerPlayback;
 	private ArrayList<Player> players;
 	private int bpm = 80;					// TODO: User must be able to set the bpm from the UI
-	private int currentBarNumber = 0;
-	private int currentStepNumber = 0;
-	private int numberOfSteps = NUMBER_OF_BUTTONS - 1;
-	static ScheduledFuture<?> t;
 	private boolean stopProcess = false;
+	private static int currentBarNumber = 0;
+	private static int currentStepNumber = 0;
+	private final int numberOfSteps = TrackFragment.NUMBER_OF_BUTTONS;
 
 	/* Initialize a PlaybackEngine with corePoolSize threads,
 	   You can pass listeners of type IClock => those listeners are not returned as players,
 	   but they can attach to the onClockUpdate trigger that is fired by the PlaybackEngine */
-	public PlaybackEngine(int corePoolSize, IClock...listeners)
+	public PlaybackEngine(Object mainListener)
 	{
-		super(corePoolSize);
-		this.players = new ArrayList<>();
-		this.listeners = new ArrayList<>();
-		addListener(listeners);
-	}
+		super();
 
-	public void addListener(IClock...listeners)
-	{
-		this.listeners.addAll(Arrays.asList(listeners));
+		this.players = new ArrayList<>();
+		this.mainListenerClock = (IClock) mainListener;
+		this.mainListenerPlayback = (IPlaybackControl) mainListener;
 	}
 
 	public void addPlayer(Player...players)
@@ -47,56 +41,64 @@ public class PlaybackEngine extends ScheduledThreadPoolExecutor
 		return players.toArray(new Player[0]);
 	}
 
-	public void startPlayback()
+	public void startPlayback(final int numberOfBars, final boolean loopPlayback)
 	{
 		stopProcess = false;
 		currentBarNumber = 0;
 		currentStepNumber = 0;
 
-		for(IClock listener : listeners) {
-			listener.onStartPlayback();
-		}
+		mainListenerPlayback.onStartPlayback();
 
-		t = scheduleAtFixedRate(new Runnable()
+		scheduleAtFixedRate(new TimerTask()
 		{
 			@Override
-			synchronized public void run()
+			public void run()
 			{
 				if(stopProcess)
 				{
-					t.cancel(true);
+					mainListenerPlayback.onStopPlayback();
+					cancel();
+				}
 
-					for(IClock listener : listeners) {
-						listener.onStopPlayback();
+				mainListenerClock.onClockUpdate(currentBarNumber, currentStepNumber);
+
+				for(final Player player : players)
+				{
+					player.onClockUpdate(currentBarNumber, currentStepNumber);
+				}
+
+				if (currentStepNumber == (numberOfSteps - 1))
+				{
+					if (currentBarNumber >= (numberOfBars - 1))
+					{
+						if (!loopPlayback) {
+							stopProcess = true;
+							mainListenerPlayback.onStopPlayback();
+							cancel();
+						}
+						else
+						{
+							currentBarNumber = 0;
+							currentStepNumber = -1;
+						}
+					}
+					else {
+						mainListenerClock.onBarComplete(currentBarNumber + 1);
 					}
 				}
-				else
-				{
-					for (Player player : players) {
-						player.onClockUpdate(currentBarNumber, currentStepNumber);
-					}
-					for(IClock listener : listeners) {
-						listener.onClockUpdate(currentBarNumber, currentStepNumber);
-					}
 
-					if (currentStepNumber++ >= numberOfSteps)
-					{
-						currentBarNumber++;
-						currentStepNumber = 0;
-					}
+				if (currentStepNumber++ >= (numberOfSteps - 1))
+				{
+					currentBarNumber++;
+					currentStepNumber = 0;
 				}
 			}
-		}, 0, 300, TimeUnit.MILLISECONDS);	// TODO: convert BPM into milliseconds
+		}, 0, 300);	// TODO: convert bpm to ms
+
 	}
 
 	public void stopPlayback()
 	{
 		stopProcess = true;
-	}
-
-	public void resetPlayback()
-	{
-		currentStepNumber = -1;
-		currentBarNumber = 0;
 	}
 }
