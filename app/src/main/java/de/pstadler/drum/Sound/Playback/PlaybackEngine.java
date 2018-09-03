@@ -9,10 +9,13 @@ import de.pstadler.drum.Track.TrackFragment;
 
 public class PlaybackEngine extends Timer
 {
+	public static final int BPM_DEFAULT = 80;
+	public static final int BPM_MIN = 30;
+	public static final int BPM_MAX = 200;
 	private IClock mainListenerClock;
 	private IPlaybackControl mainListenerPlayback;
 	private ArrayList<Player> players;
-	private int bpm = 80;					// TODO: User must be able to set the bpm from the UI
+	private int bpm = BPM_DEFAULT;					// TODO: User must be able to set the bpm from the UI
 	private boolean stopProcess = false;
 	private static int currentBarNumber = 0;
 	private static int currentStepNumber = 0;
@@ -46,6 +49,9 @@ public class PlaybackEngine extends Timer
 		currentBarNumber = 0;
 		currentStepNumber = 0;
 
+		int convertedBPM = convertBPMToMsInterval(bpm);
+
+		/* Tell the main listener, that playback has started */
 		mainListenerPlayback.onStartPlayback();
 
 		scheduleAtFixedRate(new TimerTask()
@@ -94,12 +100,30 @@ public class PlaybackEngine extends Timer
 					currentStepNumber = 0;
 				}
 			}
-		}, 0, 300);	// TODO: convert bpm to ms
+		}, 0, convertedBPM);
 
 	}
 
 	public void stopPlayback()
 	{
 		stopProcess = true;
+	}
+
+	public boolean setBpmValidated(int bpm)
+	{
+		if(bpm >= BPM_MIN && bpm <= BPM_MAX) {
+			this.bpm = bpm;
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private int convertBPMToMsInterval(int bpm)
+	{
+		if(bpm <= 0) {
+			bpm = BPM_DEFAULT;
+		}
+		return (int) ( 60.0f / bpm) * 1000;
 	}
 }

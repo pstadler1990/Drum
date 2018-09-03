@@ -67,6 +67,22 @@
                 android:scaleType="matrix"
                 android:soundEffectsEnabled="true" />
 
+            <EditText
+                android:id="@+id/main_bpm"
+                android:layout_width="89dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="70dp"
+                android:layout_toEndOf="@id/button_playstop"
+                android:hapticFeedbackEnabled="true"
+                android:hint="@string/main_bpm"
+                android:inputType="numberSigned"
+                android:textAlignment="viewEnd"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/colorWhite"
+                android:textSize="@dimen/text_size_larger" />
+
         </RelativeLayout>
 
     </LinearLayout>

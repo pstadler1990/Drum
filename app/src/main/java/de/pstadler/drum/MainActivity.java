@@ -1,5 +1,6 @@
 package de.pstadler.drum;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -28,8 +29,8 @@ import de.pstadler.drum.Track.TrackFragment;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, IClock, IPlaybackControl
 {
-    public static final String TAG = "MainActivityLog";
-	public static final int TRACKS_MAX = 15;
+	public static final int TRACKS_MAX = 8;
+	public static final int PAGES_MAX = 10;	// TODO: Add limit to page create function!
     public static int pages = 0;
     private boolean loopPlayback = false;
     private boolean isPlaying = false;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageButton buttonPlayStop;
     private TextView mainStepNumber;
     private TextView mainBarNumber;
+    private TextView mainBPM;
     protected ArrayList<BarFragment> barFragments;
     private PlaybackEngine playbackEngine;
 
@@ -53,13 +55,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         buttonPlayStop = findViewById(R.id.button_playstop);
         mainBarNumber = findViewById(R.id.main_bar_number);
         mainStepNumber = findViewById(R.id.main_step_number);
+        mainBPM = findViewById(R.id.main_bpm);
 
         mainAppbar.setElevation(getResources().getDimension(R.dimen.app_main_topbar_elevation));
+		getSupportActionBar().setElevation(0);
 
         pagerAdapter = new ScreenSlidePageAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
-
-        getSupportActionBar().setElevation(0);
 
         buttonPlayStop.setOnClickListener(this);
 
@@ -75,8 +77,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else
             createNewPage();
 
-        /* Create playback engine */
-        playbackEngine = new PlaybackEngine(this);	/* n = number of channels */
+        playbackEngine = new PlaybackEngine(this);
+
+		mainBPM.setText("80");
     }
 
 	@Override
@@ -195,8 +198,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         {
 			case R.id.button_playstop:
 
-				if(isPlaying)
-				{
+				if(isPlaying) {
 					playbackEngine.stopPlayback();
 				}
 				else
@@ -205,6 +207,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 					preparePlayback();
 
 					viewPager.setCurrentItem(0);
+
+					/* Get the user entered BPM, validate and set if valid */
+					int bpmText = Integer.parseInt(mainBPM.getText().toString());
+					boolean validBPM = playbackEngine.setBpmValidated(bpmText);
+					if(!validBPM) {
+						String bpmDefaultText = String.valueOf(PlaybackEngine.BPM_DEFAULT);
+						mainBPM.setText(bpmDefaultText);
+					}
+
+					/* Start playback finally */
 					playbackEngine.startPlayback(pagerAdapter.getCount(), loopPlayback);
 				}
 				break;

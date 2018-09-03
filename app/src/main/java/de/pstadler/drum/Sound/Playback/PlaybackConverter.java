@@ -1,10 +1,10 @@
 package de.pstadler.drum.Sound.Playback;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
+import de.pstadler.drum.Database.Sound;
 import de.pstadler.drum.Track.BarFragment;
 import de.pstadler.drum.Track.TrackFragment;
+
 
 public class PlaybackConverter
 {
@@ -45,18 +45,25 @@ public class PlaybackConverter
 		{
 			for(int e=0; e<list.get(p).length; e++)
 			{
-				System.arraycopy(list.get(p)[e].getPlaybackArray(), 0, tmpArray[e], (p*8), 8);
+				Object src = list.get(p)[e].getPlaybackArray();
+				if(src != null) {
+					System.arraycopy(src, 0, tmpArray[e], (p * 8), 8);
+				}
 			}
 		}
 
 		for(int j=0; j<trackCount; j++)
 		{
-			playbackArrays[j] = new PlaybackArray(list.get(0)[j].getSound(), null);
-			playbackArrays[j].playbackArray = new boolean[arrayLengthPerTrack];
+			Sound src = list.get(0)[j].getSound();
+			if(src != null)
+			{
+				playbackArrays[j] = new PlaybackArray(src, null);
+				playbackArrays[j].playbackArray = new boolean[arrayLengthPerTrack];
 
-			System.arraycopy(tmpArray[j], 0, playbackArrays[j].playbackArray, 0, arrayLengthPerTrack);
+				System.arraycopy(tmpArray[j], 0, playbackArrays[j].playbackArray, 0, arrayLengthPerTrack);
+			}
+
 		}
-
 
 		return playbackArrays;
 	}

@@ -108,7 +108,7 @@ public class SoundkitDownloadedFragment extends Fragment implements ISoundManage
 
 					/* Show dialog to confirm the download of the selected soundkit */
 					AlertDialog dialog = new AlertDialog.Builder(getContext())
-							.setPositiveButton(R.string.delete_kit, new DialogInterface.OnClickListener()    //TODO: string hardcoded
+							.setPositiveButton("Delete kit", new DialogInterface.OnClickListener()    //TODO: string hardcoded
 							{
 								@Override
 								public void onClick(DialogInterface dialog, int which)
@@ -123,12 +123,12 @@ public class SoundkitDownloadedFragment extends Fragment implements ISoundManage
 											((App) getActivity().getApplicationContext()).getDatabase().deleteKit((IDBHandler) getContext(), soundkit.name);
 										} catch (ClassCastException e)
 										{
-											throw new ClassCastException(String.valueOf(R.string.idb_handler));    // TODO: hard coded string
+											throw new ClassCastException("Must implement IDBHandler interface!");    // TODO: hard coded string
 										}
 									}
 								}
 							})
-							.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()            //TODO: string hardcoded
+							.setNegativeButton("Cancel", new DialogInterface.OnClickListener()            //TODO: string hardcoded
 							{
 								@Override
 								public void onClick(DialogInterface dialog, int which)
@@ -136,7 +136,7 @@ public class SoundkitDownloadedFragment extends Fragment implements ISoundManage
 									dialog.cancel();
 								}
 							})
-							.setTitle(R.string.delete_soundkit)                                                    // TODO: hardcoded string
+							.setTitle("Delete soundkit?")                                                    // TODO: hardcoded string
 							.setMessage(soundkit.name)
 							.create();
 

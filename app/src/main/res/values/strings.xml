@@ -19,6 +19,8 @@
     <string name="kit_name">kit-name</string>
     <string name="kit_elements">kit-elements</string>
 
+    <string name="main_bpm">BPM</string>
+
     <string name="mainmenu_button_new_track">Start a new project</string>
     <string name="mainmenu_button_load_track">Load a project</string>
     <string name="mainmenu_button_manage_kits">Manage sound kits</string>
