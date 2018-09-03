@@ -323,19 +323,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 					});
 				}
 			}
-			else
-			{
-				runOnUiThread(new Runnable()
-				{
-					@Override
-					public void run() {
-						mainBarNumber.setText(String.valueOf(barId + 1));
-					}
-				});
-				/* Follow the music playing flow => go to the next page if a new bar starts */
-				//viewPager.setCurrentItem(barId + 1);
-				//TODO: while(fragment.isHidden()); crash if more than 3 pages!
-			}
 		}
 	}
 
@@ -372,21 +359,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	@Override
 	public void onBarComplete(final int barId)
 	{
-		runOnUiThread(new Runnable()
+		if(barId >= pagerAdapter.getCount())
 		{
-			@Override
-			public void run() {
-				mainBarNumber.setText(String.valueOf(barId));
-			}
-		});
-		/* Follow the music playing flow => go to the next page if a new bar starts */
-		if(barId + 1 >= pagerAdapter.getCount()) {
-			viewPager.setCurrentItem(0);
-		}
-		else {
-			viewPager.setCurrentItem(barId + 1);
-		}
+			runOnUiThread(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					mainBarNumber.setText(String.valueOf(0));
 
+					BarFragment fragment = (BarFragment) pagerAdapter.getItem(0);
+					while(fragment.isHidden());
+					viewPager.setCurrentItem(0);
+				}
+			});
+		}
+		else
+		{
+			runOnUiThread(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					mainBarNumber.setText(String.valueOf(barId));
+
+					BarFragment fragment = (BarFragment) pagerAdapter.getItem(barId);
+					while(fragment.isHidden());
+					viewPager.setCurrentItem(barId);
+				}
+			});
+		}
 	}
 
 	/*Adapter for the pages (= bars); each page represents a single bar of the whole song*/

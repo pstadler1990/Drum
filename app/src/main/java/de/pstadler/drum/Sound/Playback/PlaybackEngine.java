@@ -66,21 +66,25 @@ public class PlaybackEngine extends Timer
 					player.onClockUpdate(currentBarNumber, currentStepNumber);
 				}
 
-				if (currentStepNumber == (numberOfSteps - 1))
+				if ((currentStepNumber + 1) == numberOfSteps)
 				{
-					if (currentBarNumber >= (numberOfBars - 1))
+					if ((currentBarNumber + 1) >= numberOfBars)
 					{
-						if (!loopPlayback) {
+						if(!loopPlayback)
+						{
 							stopProcess = true;
 							mainListenerPlayback.onStopPlayback();
 							cancel();
 						}
 						else
 						{
-							mainListenerClock.onBarComplete(currentBarNumber + 1);
 							currentBarNumber = 0;
 							currentStepNumber = -1;
+							mainListenerClock.onBarComplete(0);
 						}
+					}
+					else {
+						mainListenerClock.onBarComplete(currentBarNumber + 1);
 					}
 				}
 
