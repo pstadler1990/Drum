@@ -80,7 +80,7 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 
 				/* Show dialog to confirm the download of the selected soundkit */
 				AlertDialog dialog = new AlertDialog.Builder(getContext())
-						.setPositiveButton("Download kit", new DialogInterface.OnClickListener()	//TODO: string hardcoded
+						.setPositiveButton(R.string.download_kit, new DialogInterface.OnClickListener()	//TODO: string hardcoded
 						{
 							@Override
 							public void onClick(DialogInterface dialog, int which)
@@ -94,7 +94,7 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 								}
 							}
 						})
-						.setNegativeButton("Cancel", new DialogInterface.OnClickListener()			//TODO: string hardcoded
+						.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()			//TODO: string hardcoded
 						{
 							@Override
 							public void onClick(DialogInterface dialog, int which)
@@ -102,7 +102,7 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 								dialog.cancel();
 							}
 						})
-						.setTitle("Download soundkit?")													// TODO: hardcoded string
+						.setTitle(R.string.download_kit_2)													// TODO: hardcoded string
 						.setMessage(soundkit.name)
 						.create();
 
@@ -118,7 +118,7 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 	{
 		/* Show indicator */
 		progressDialog = new ProgressDialog(getContext());
-		progressDialog.setMessage("Downloading files...");		//TODO: hardcoded string
+		progressDialog.setMessage(String.valueOf(R.string.download_files));	//TODO: hardcoded string
 		progressDialog.show();
 	}
 
@@ -147,8 +147,8 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 			JSONObject jsonObject = jsonList.get(0).optJSONObject(i);
 
 			Soundkit soundkit = new Soundkit();
-			soundkit.name = jsonObject.optString("kit-name");				//TODO: hardcoded string
-			JSONObject kitElements = jsonObject.optJSONObject("kit-elements");	//TODO: hardcoded string
+			soundkit.name = jsonObject.optString(String.valueOf(R.string.kit_name));				//TODO: hardcoded string
+			JSONObject kitElements = jsonObject.optJSONObject(String.valueOf(R.string.kit_elements));	//TODO: hardcoded string
 
 			/* Store url strings in the sound kit to be able to download the sample files later */
 			if(kitElements.length() > 0)

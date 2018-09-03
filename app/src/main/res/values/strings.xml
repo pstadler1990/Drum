@@ -1,6 +1,24 @@
 <resources>
     <string name="app_name">Drum</string>
     <string name="action_cancel">Cancel</string>
+
+    <string name="db_sound">DB_SOUND</string>
+    <string name="get_sound">getSound</string>
+    <string name="get_soundkits">getSoundkits</string>
+    <string name="kit_exists">kitExists</string>
+    <string name="sound_exists">soundExists</string>
+
+    <string name="delete_kit">Delete kit</string>
+    <string name="idb_handler">Must implement IDBHandler interface!</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_soundkit">Delete soundkit?</string>
+
+    <string name="download_kit">Download kit</string>
+    <string name="download_kit_2">Download kit?</string>
+    <string name="download_files">"Downloading files..."</string>
+    <string name="kit_name">kit-name</string>
+    <string name="kit_elements">kit-elements</string>
+
     <string name="mainmenu_button_new_track">Start a new project</string>
     <string name="mainmenu_button_load_track">Load a project</string>
     <string name="mainmenu_button_manage_kits">Manage sound kits</string>
