@@ -53,7 +53,7 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 	{
 		/* Show indicator */
 		progressDialog = new ProgressDialog(this);
-		progressDialog.setMessage("Downloading files...");		//TODO: hardcoded string
+		progressDialog.setMessage(String.valueOf(R.string.download_files));		//TODO: hardcoded string
 		progressDialog.show();
 	}
 
@@ -88,7 +88,7 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 					switch (message.what)
 					{
 						case MESSAGE_TYPE_KIT_EXISTS:
-							boolean exists = message.getData().getBoolean("soundExists");			//TODO: hard coded string
+							boolean exists = message.getData().getBoolean(String.valueOf(R.string.sound_exists));			//TODO: hard coded string
 							if(!exists)
 							{
 								/* Write the files to the internal disk
