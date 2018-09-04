@@ -12,6 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import de.pstadler.drum.Database.Sound;
 import de.pstadler.drum.DialogInstrument;
+import de.pstadler.drum.MainActivity;
 import de.pstadler.drum.R;
 import de.pstadler.drum.Sound.ISoundSelected;
 
@@ -121,6 +122,12 @@ public class TrackFragment extends Fragment implements View.OnClickListener, ISo
 		return sound;
 	}
 
+	public void setSound(Sound sound)
+	{
+		this.sound = sound;
+		setInstrumentText(sound.name);
+	}
+
 	private void ensureButtonStatesExist()
     {
         buttonStates = (buttonStates == null)? new boolean[NUMBER_OF_BUTTONS] : buttonStates;
@@ -129,11 +136,6 @@ public class TrackFragment extends Fragment implements View.OnClickListener, ISo
     public void setInstrumentText(String text)
     {
         instrumentTextView.setText(text);
-    }
-
-    public String getInstrumentText()
-    {
-        return instrumentTextView.getText().toString();
     }
 
     public int getTrackId()
@@ -180,7 +182,7 @@ public class TrackFragment extends Fragment implements View.OnClickListener, ISo
 	public void onSoundSelected(Sound sound)
 	{
 		/* Sound from DialogInstrument arrives here */
-		this.sound = sound;
-		setInstrumentText(sound.name);
+		setSound(sound);
+		((MainActivity)getActivity()).synchronizeSounds(trackId, sound);
 	}
 }

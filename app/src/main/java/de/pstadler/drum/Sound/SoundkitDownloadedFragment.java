@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.media.MediaPlayer;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ExpandableListView;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import de.pstadler.drum.App;
@@ -19,6 +22,7 @@ import de.pstadler.drum.Database.IDBHandler;
 import de.pstadler.drum.Database.Sound;
 import de.pstadler.drum.IChildFragment;
 import de.pstadler.drum.R;
+import de.pstadler.drum.Sound.Playback.PlaybackEngine;
 
 
 public class SoundkitDownloadedFragment extends Fragment implements ISoundManager
@@ -80,6 +84,7 @@ public class SoundkitDownloadedFragment extends Fragment implements ISoundManage
 				if (soundHandler != null)
 				{
 					Sound sound = (Sound) parent.getExpandableListAdapter().getChild(groupPosition, childPosition);
+
 					soundHandler.onSoundSelected(sound);
 				}
 				return false;

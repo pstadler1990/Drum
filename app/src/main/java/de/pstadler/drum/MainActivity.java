@@ -402,6 +402,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		}
 	}
 
+	public void synchronizeSounds(int trackId, Sound sound)
+	{
+		for(int p=0; p<pagerAdapter.getCount(); p++)
+		{
+			BarFragment fragment = (BarFragment) pagerAdapter.getItem(p);
+			while(fragment.isHidden());
+
+			TrackFragment trackFragment = (TrackFragment) fragment.getTracks().get(trackId);
+			trackFragment.setSound(sound);
+		}
+	}
+
 	/*Adapter for the pages (= bars); each page represents a single bar of the whole song*/
     private class ScreenSlidePageAdapter extends FragmentStatePagerAdapter
     {

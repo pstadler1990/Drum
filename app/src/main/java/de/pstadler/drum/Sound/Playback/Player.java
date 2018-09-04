@@ -35,7 +35,7 @@ public class Player extends MediaPlayer implements IClock
 	@Override
 	public void onClockUpdate(int barId, int stepId)
 	{
-		if(playbackArray.getPlaybackArray()[(barId * 8) + stepId])		// TODO: replace 8 with track button count constant
+		if(readyForPlayback && playbackArray.getPlaybackArray()[(barId * 8) + stepId])		// TODO: replace 8 with track button count constant
 		{
 			start();
 		}
