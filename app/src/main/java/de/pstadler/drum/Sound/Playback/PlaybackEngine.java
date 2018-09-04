@@ -10,12 +10,12 @@ import de.pstadler.drum.Track.TrackFragment;
 public class PlaybackEngine extends Timer
 {
 	public static final int BPM_DEFAULT = 80;
-	public static final int BPM_MIN = 30;
-	public static final int BPM_MAX = 200;
+	private static final int BPM_MIN = 30;
+	private static final int BPM_MAX = 250;
 	private IClock mainListenerClock;
 	private IPlaybackControl mainListenerPlayback;
 	private ArrayList<Player> players;
-	private int bpm = BPM_DEFAULT;					// TODO: User must be able to set the bpm from the UI
+	private int bpm = BPM_DEFAULT;
 	private boolean stopProcess = false;
 	private static int currentBarNumber = 0;
 	private static int currentStepNumber = 0;
@@ -124,6 +124,7 @@ public class PlaybackEngine extends Timer
 		if(bpm <= 0) {
 			bpm = BPM_DEFAULT;
 		}
-		return (int) ( 60.0f / bpm) * 1000;
+		float a = ( 60 / (float)bpm) * 1000;
+		return (int) a;
 	}
 }

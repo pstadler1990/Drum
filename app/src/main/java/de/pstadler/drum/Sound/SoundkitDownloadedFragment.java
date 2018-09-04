@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,15 +14,11 @@ import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import de.pstadler.drum.App;
 import de.pstadler.drum.Database.IDBHandler;
 import de.pstadler.drum.Database.Sound;
 import de.pstadler.drum.IChildFragment;
 import de.pstadler.drum.R;
-import de.pstadler.drum.http.DownloadSound;
-
-import static de.pstadler.drum.Database.DB.MESSAGE_TYPE_DELETE_KIT_OK;
 
 
 public class SoundkitDownloadedFragment extends Fragment implements ISoundManager
@@ -33,6 +28,7 @@ public class SoundkitDownloadedFragment extends Fragment implements ISoundManage
 	private ExpandableListView listViewDownloadedKits;
 	private ArrayList<Soundkit> soundkits;
 	private SoundkitsDownloadedAdapter soundkitAdapter;
+	private boolean hasHandler = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -60,9 +56,10 @@ public class SoundkitDownloadedFragment extends Fragment implements ISoundManage
 		this.soundHandler = soundHandler;
 	}
 
-	public void setChildHandler(IChildFragment childHandler)
+	public void setChildHandler(IChildFragment childHandler, boolean hasHandler)
 	{
 		this.childHandler = childHandler;
+		this.hasHandler = hasHandler;
 	}
 
 	@NonNull
@@ -89,62 +86,65 @@ public class SoundkitDownloadedFragment extends Fragment implements ISoundManage
 			}
 		});
 
-		/* A long click on the group triggers an AlertDialog to delete the selected kit from
-		the database and local disk */
-		listViewDownloadedKits.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+		if(hasHandler)
 		{
-			@Override
-			/* Source: https://stackoverflow.com/questions/28561551/how-can-i-set-longclick-on-group-in-expandablelistview-android */
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
+			/* A long click on the group triggers an AlertDialog to delete the selected kit from
+			the database and local disk */
+			listViewDownloadedKits.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
 			{
-				long packedPosition = listViewDownloadedKits.getExpandableListPosition(position);
-
-				int itemType = ExpandableListView.getPackedPositionType(packedPosition);
-				int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
-
-				if (itemType == ExpandableListView.PACKED_POSITION_TYPE_GROUP)
+				@Override
+				/* Source: https://stackoverflow.com/questions/28561551/how-can-i-set-longclick-on-group-in-expandablelistview-android */
+				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
 				{
-					final Soundkit soundkit = (Soundkit) listViewDownloadedKits.getItemAtPosition(groupPosition);
+					long packedPosition = listViewDownloadedKits.getExpandableListPosition(position);
 
-					/* Show dialog to confirm the download of the selected soundkit */
-					AlertDialog dialog = new AlertDialog.Builder(getContext())
-							.setPositiveButton("Delete kit", new DialogInterface.OnClickListener()    //TODO: string hardcoded
-							{
-								@Override
-								public void onClick(DialogInterface dialog, int which)
+					int itemType = ExpandableListView.getPackedPositionType(packedPosition);
+					int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
+
+					if (itemType == ExpandableListView.PACKED_POSITION_TYPE_GROUP)
+					{
+						final Soundkit soundkit = (Soundkit) listViewDownloadedKits.getItemAtPosition(groupPosition);
+
+						/* Show dialog to confirm the download of the selected soundkit */
+						AlertDialog dialog = new AlertDialog.Builder(getContext())
+								.setPositiveButton("Delete kit", new DialogInterface.OnClickListener()
 								{
-									/* Requests the download of the selected kit from the github repository,
-									   Expects the current context to implement the IDBHandler interface, will throw
-									   a ClassCastException else */
-									if (soundkit != null)
+									@Override
+									public void onClick(DialogInterface dialog, int which)
 									{
-										try
+										/* Requests the download of the selected kit from the github repository,
+										   Expects the current context to implement the IDBHandler interface, will throw
+										   a ClassCastException else */
+										if (soundkit != null)
 										{
-											((App) getActivity().getApplicationContext()).getDatabase().deleteKit((IDBHandler) getContext(), soundkit.name);
-										} catch (ClassCastException e)
-										{
-											throw new ClassCastException("Must implement IDBHandler interface!");    // TODO: hard coded string
+											try
+											{
+												((App) getActivity().getApplicationContext()).getDatabase().deleteKit((IDBHandler) getContext(), soundkit.name);
+											} catch (ClassCastException e)
+											{
+												throw new ClassCastException("Must implement IDBHandler interface!");
+											}
 										}
 									}
-								}
-							})
-							.setNegativeButton("Cancel", new DialogInterface.OnClickListener()            //TODO: string hardcoded
-							{
-								@Override
-								public void onClick(DialogInterface dialog, int which)
+								})
+								.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
 								{
-									dialog.cancel();
-								}
-							})
-							.setTitle("Delete soundkit?")                                                    // TODO: hardcoded string
-							.setMessage(soundkit.name)
-							.create();
+									@Override
+									public void onClick(DialogInterface dialog, int which)
+									{
+										dialog.cancel();
+									}
+								})
+								.setTitle("Delete soundkit?")
+								.setMessage(soundkit.name)
+								.create();
 
-					dialog.show();
+						dialog.show();
+					}
+					return false;
 				}
-				return false;
-			}
-		});
+			});
+		}
 
 		return rootView;
 	}

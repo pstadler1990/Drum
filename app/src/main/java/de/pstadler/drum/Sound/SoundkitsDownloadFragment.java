@@ -28,15 +28,16 @@ import de.pstadler.drum.http.IDownloadListener;
 public class SoundkitsDownloadFragment extends Fragment implements IDownloadListener
 {
 	private IRequestDownload iRequestDownload;
-    private ListView listViewAvailableKits;
-    private ArrayList<Soundkit> soundkits;
-    private SoundkitAdapter soundkitAdapter;
+	private ListView listViewAvailableKits;
+	private ArrayList<Soundkit> soundkits;
+	private SoundkitAdapter soundkitAdapter;
 	private ProgressDialog progressDialog;
+	private boolean hasHandler = false;
 
 	@Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
+	public void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
 
 		soundkits = new ArrayList<>();
 		soundkitAdapter = new SoundkitAdapter(getContext(), soundkits);
@@ -44,7 +45,7 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 		/* Downloads a list of soundkits from the github repository */
 		HttpDownloadTaskJSON downloadTask = new HttpDownloadTaskJSON(this);
 		downloadTask.execute(getString(R.string.res_sound_kitlist));
-    }
+	}
 
 
 	@Override
@@ -54,71 +55,77 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 
 		try {
 			iRequestDownload = (IRequestDownload) getActivity();
+			hasHandler = true;
+
 		}
-		catch (ClassCastException e)
-		{
-			throw new ClassCastException(context.toString() +
-					" has not implemented IRequestDownload interface!");
+		catch (ClassCastException e) {
+			hasHandler = false;
 		}
 	}
 
 	@NonNull
 	@Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState)
-    {
-        View rootView = inflater.inflate(R.layout.fragment_download_soundkits, container, false);
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState)
+	{
+		View rootView = inflater.inflate(R.layout.fragment_download_soundkits, container, false);
 
-        listViewAvailableKits = rootView.findViewById(R.id.soundkits_list_kits);
-        listViewAvailableKits.setAdapter(soundkitAdapter);
-        listViewAvailableKits.setLongClickable(true);
-        listViewAvailableKits.setOnItemClickListener(new AdapterView.OnItemClickListener()
+		listViewAvailableKits = rootView.findViewById(R.id.soundkits_list_kits);
+		listViewAvailableKits.setAdapter(soundkitAdapter);
+
+		/* Attach a long click handler for the items, but only if the parent activity / fragment
+		   implements the required interface */
+		if(hasHandler)
 		{
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, final int position, long id)
+			listViewAvailableKits.setLongClickable(true);
+			listViewAvailableKits.setOnItemClickListener(new AdapterView.OnItemClickListener()
 			{
-				final Soundkit soundkit = (Soundkit) listViewAvailableKits.getItemAtPosition(position);
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, final int position, long id)
+				{
+					final Soundkit soundkit = (Soundkit) listViewAvailableKits.getItemAtPosition(position);
 
-				/* Show dialog to confirm the download of the selected soundkit */
-				AlertDialog dialog = new AlertDialog.Builder(getContext())
-						.setPositiveButton(R.string.download_kit, new DialogInterface.OnClickListener()	//TODO: string hardcoded
-						{
-							@Override
-							public void onClick(DialogInterface dialog, int which)
-							{						// TODO: hardcoded string
-								/* Requests the download of the selected kit from the github repository */
-								if(soundkit != null)
-								{
-									DownloadSound[] downloadSounds = soundkit.downloadSounds.toArray(new DownloadSound[soundkit.downloadSounds.size()]);
-									soundkit.elements = downloadSounds.length;
-									iRequestDownload.requestDownload(downloadSounds);
-								}
-							}
-						})
-						.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()			//TODO: string hardcoded
-						{
-							@Override
-							public void onClick(DialogInterface dialog, int which)
+					/* Show dialog to confirm the download of the selected soundkit */
+					AlertDialog dialog = new AlertDialog.Builder(getContext())
+							.setPositiveButton("Download kit", new DialogInterface.OnClickListener()
 							{
-								dialog.cancel();
-							}
-						})
-						.setTitle(R.string.download_kit_2)													// TODO: hardcoded string
-						.setMessage(soundkit.name)
-						.create();
+								@Override
+								public void onClick(DialogInterface dialog, int which)
+								{
+									/* Requests the download of the selected kit from the github repository */
+									if (soundkit != null)
+									{
+										DownloadSound[] downloadSounds = soundkit.downloadSounds.toArray(new DownloadSound[soundkit.downloadSounds.size()]);
+										soundkit.elements = downloadSounds.length;
+										iRequestDownload.requestDownload(downloadSounds);
+									}
+								}
+							})
+							.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+							{
+								@Override
+								public void onClick(DialogInterface dialog, int which)
+								{
+									dialog.cancel();
+								}
+							})
+							.setTitle("Download soundkit?")
+							.setMessage(soundkit.name)
+							.create();
 
-				dialog.show();
-			}
-		});
+					dialog.show();
+				}
+			});
+		}
 
-        return rootView;
-    }
+		return rootView;
+	}
 
 	@Override
 	public void onDownloadStart()
 	{
 		/* Show indicator */
 		progressDialog = new ProgressDialog(getContext());
-		progressDialog.setMessage(String.valueOf(R.string.download_files));	//TODO: hardcoded string
+		progressDialog.setMessage("Downloading files...");
 		progressDialog.show();
 	}
 
@@ -147,8 +154,8 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 			JSONObject jsonObject = jsonList.get(0).optJSONObject(i);
 
 			Soundkit soundkit = new Soundkit();
-			soundkit.name = jsonObject.optString(String.valueOf(R.string.kit_name));				//TODO: hardcoded string
-			JSONObject kitElements = jsonObject.optJSONObject(String.valueOf(R.string.kit_elements));	//TODO: hardcoded string
+			soundkit.name = jsonObject.optString("kit-name");
+			JSONObject kitElements = jsonObject.optJSONObject("kit-elements");
 
 			/* Store url strings in the sound kit to be able to download the sample files later */
 			if(kitElements.length() > 0)

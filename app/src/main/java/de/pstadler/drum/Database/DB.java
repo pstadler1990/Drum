@@ -1,15 +1,10 @@
 package de.pstadler.drum.Database;
 
-import android.annotation.SuppressLint;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
-
-import java.lang.ref.WeakReference;
-
 import de.pstadler.drum.FileAccess.FileAccessor;
-import de.pstadler.drum.R;
 import de.pstadler.drum.Sound.Soundkit;
 
 
@@ -22,7 +17,7 @@ public class DB
 	public static final int MESSAGE_TYPE_KIT_EXISTS = 4;
 	public static final int MESSAGE_TYPE_GET_SOUNDKITS = 5;
 
-	private static final String soundDatabaseName = String.valueOf(R.string.db_sound);		//TODO: hard coded string
+	private static final String soundDatabaseName = "DB_SOUND";
 	private SoundDatabase soundDatabase;
 	private Context context;
 
@@ -57,7 +52,7 @@ public class DB
 				Message message = new Message();
 				Bundle bundle = new Bundle();
 
-				bundle.putParcelableArray(String.valueOf(R.string.get_sound), sounds);		//TODO: hard coded string
+				bundle.putParcelableArray("getSounds", sounds);
 				message.what = MESSAGE_TYPE_GET_SOUNDS;
 				message.setData(bundle);
 
@@ -81,7 +76,7 @@ public class DB
 				Message message = new Message();
 				Bundle bundle = new Bundle();
 
-				bundle.putParcelableArray(String.valueOf(R.string.get_soundkits), soundkits);		//TODO: hard coded string
+				bundle.putParcelableArray("getSoundkits", soundkits);
 				message.what = MESSAGE_TYPE_GET_SOUNDKITS;
 				message.setData(bundle);
 
@@ -153,7 +148,7 @@ public class DB
 				message.what = MESSAGE_TYPE_KIT_EXISTS;
 
 				Bundle bundle = new Bundle();
-				bundle.putBoolean(String.valueOf(R.string.kit_exists), exists);			//TODO: hard coded string
+				bundle.putBoolean("kitExists", exists);
 				message.setData(bundle);
 
 				if(handler != null) {
@@ -176,7 +171,7 @@ public class DB
 				message.what = MESSAGE_TYPE_KIT_EXISTS;
 
 				Bundle bundle = new Bundle();
-				bundle.putBoolean(String.valueOf(R.string.sound_exists), exists);		//TODO: hard coded string
+				bundle.putBoolean("soundExists", exists);
 				message.setData(bundle);
 
 				if(handler != null) {
@@ -187,6 +182,3 @@ public class DB
 	}
 
 }
-
-
-

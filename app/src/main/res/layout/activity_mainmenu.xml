@@ -4,36 +4,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainMenuActivity"
-    android:orientation="vertical"
-    android:weightSum=".75">
+    android:orientation="vertical">
 
     <Button
         android:id="@+id/button_new_track"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight=".15"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:backgroundTint="@color/colorAccent"
         android:text="@string/mainmenu_button_new_track"
-        android:textSize="@dimen/text_size_larger"
-        android:backgroundTint="@color/colorAccentCTA"
-        android:textColor="@color/colorWhite"/>
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/text_size_default" />
 
     <Button
         android:id="@+id/button_load_track"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight=".15"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/mainmenu_button_load_track"
-        android:textSize="@dimen/text_size_larger"/>
+        android:textSize="@dimen/text_size_default" />
 
     <Button
         android:id="@+id/button_manage_kits"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight=".15"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/mainmenu_button_manage_kits"
-        android:textSize="@dimen/text_size_larger"/>
+        android:textSize="@dimen/text_size_default" />
 
 </LinearLayout>

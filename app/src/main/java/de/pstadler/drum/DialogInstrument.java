@@ -38,7 +38,7 @@ public class DialogInstrument extends DialogFragment implements IChildFragment, 
 		}
 		catch (ClassCastException e)
 		{
-			throw new ClassCastException("Context must implement ISoundSelected interface");		// TODO: hard coded string
+			throw new ClassCastException("Context must implement ISoundSelected interface");
 		}
 
 	}
@@ -49,7 +49,7 @@ public class DialogInstrument extends DialogFragment implements IChildFragment, 
         View v = inflater.inflate(R.layout.dialog_instrument, container, false);
 
 		soundkitDownloadedFragment = new SoundkitDownloadedFragment();
-		soundkitDownloadedFragment.setChildHandler(this);
+		soundkitDownloadedFragment.setChildHandler(this, false);
 		soundkitDownloadedFragment.setSoundHandler(this);
 		getChildFragmentManager().beginTransaction().add(R.id.dialog_instrument_container_kits, soundkitDownloadedFragment, "FRAGMENT_DOWNLOADED_SOUNDKITS").commit();
 

@@ -1,6 +1,5 @@
 package de.pstadler.drum;
 
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -406,7 +405,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	/*Adapter for the pages (= bars); each page represents a single bar of the whole song*/
     private class ScreenSlidePageAdapter extends FragmentStatePagerAdapter
     {
-        public ScreenSlidePageAdapter(FragmentManager fm)
+        ScreenSlidePageAdapter(FragmentManager fm)
         {
             super(fm);
         }

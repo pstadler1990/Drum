@@ -18,7 +18,7 @@ import de.pstadler.drum.Sound.ISoundSelected;
 
 public class TrackFragment extends Fragment implements View.OnClickListener, ISoundSelected
 {
-	public static final String TRACK_DEFAULT_NAME = "empty"; 	// TODO: hard coded string
+	public static final String TRACK_DEFAULT_NAME = "empty";
     public static final int NUMBER_OF_BUTTONS = 8;
     private TextView instrumentTextView;
     private ArrayList<Button> buttons = new ArrayList<>();

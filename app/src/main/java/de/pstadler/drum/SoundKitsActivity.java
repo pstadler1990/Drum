@@ -44,7 +44,7 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 		getSupportFragmentManager().beginTransaction().add(R.id.soundkits_available_online_container, soundkitsDownloadFragment, "FRAGMENT_AVAILABLE_SOUNDKITS").commit();
 
 		soundkitDownloadedFragment = new SoundkitDownloadedFragment();
-		soundkitDownloadedFragment.setChildHandler(this);
+		soundkitDownloadedFragment.setChildHandler(this, true);
 		getSupportFragmentManager().beginTransaction().add(R.id.soundkits_downloaded_container, soundkitDownloadedFragment, "FRAGMENT_DOWNLOADED_SOUNDKITS").commit();
 	}
 
@@ -53,7 +53,7 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 	{
 		/* Show indicator */
 		progressDialog = new ProgressDialog(this);
-		progressDialog.setMessage(String.valueOf(R.string.download_files));		//TODO: hardcoded string
+		progressDialog.setMessage("Downloading files...");
 		progressDialog.show();
 	}
 
@@ -88,7 +88,7 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 					switch (message.what)
 					{
 						case MESSAGE_TYPE_KIT_EXISTS:
-							boolean exists = message.getData().getBoolean(String.valueOf(R.string.sound_exists));			//TODO: hard coded string
+							boolean exists = message.getData().getBoolean("soundExists");
 							if(!exists)
 							{
 								/* Write the files to the internal disk

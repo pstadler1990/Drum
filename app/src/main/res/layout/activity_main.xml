@@ -12,9 +12,10 @@
         android:layout_height="60dp"
         android:background="@color/colorAccent"
         android:clipToPadding="false"
-        android:elevation="5dp"
+        android:elevation="20dp"
+        android:focusableInTouchMode="true"
         android:padding="@dimen/app_main_topbar_padding"
-        android:paddingBottom="5dp"
+        android:paddingBottom="20dp"
         android:weightSum="1">
 
         <RelativeLayout
@@ -69,18 +70,23 @@
 
             <EditText
                 android:id="@+id/main_bpm"
-                android:layout_width="89dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginStart="70dp"
+                android:layout_marginStart="80dp"
                 android:layout_toEndOf="@id/button_playstop"
+                android:backgroundTint="@color/colorWhite"
                 android:hapticFeedbackEnabled="true"
                 android:hint="@string/main_bpm"
                 android:inputType="numberSigned"
+                android:nextFocusLeft="@id/main_bpm"
+                android:nextFocusUp="@id/main_bpm"
                 android:textAlignment="viewEnd"
                 android:textColor="@android:color/white"
+                android:textColorHighlight="@color/colorWhite"
                 android:textColorHint="@color/colorWhite"
+                android:textColorLink="@color/colorWhite"
                 android:textSize="@dimen/text_size_larger" />
 
         </RelativeLayout>
