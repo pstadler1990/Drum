@@ -2,11 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:id="@+id/menu_main_group_tracks">
-        <item android:id="@+id/menu_main_add_track" android:title="Add track"></item>
-        <item android:id="@+id/menu_main_add_page" android:title="Add page"></item>
+        <item android:id="@+id/menu_main_add_track" android:title="@string/menu_add_track" />
+        <item android:id="@+id/menu_main_add_page" android:title="@string/menu_add_bar" />
     </group>
 
     <group android:id="@+id/menu_main_group_settings" android:checkableBehavior="single">
-        <item android:id="@+id/menu_main_loop_enable" android:title="Loop" android:checkable="true"></item>
+        <item android:id="@+id/menu_main_loop_enable" android:title="@string/menu_loop" android:checkable="true" />
+    </group>
+
+    <group android:id="@+id/menu_main_group_save">
+        <item android:id="@+id/menu_main_save_track" android:title="@string/menu_save_track" />
     </group>
 </menu>

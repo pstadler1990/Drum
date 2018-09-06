@@ -299,6 +299,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 					item.setChecked(true);
 				}
 				break;
+			case R.id.menu_main_save_track:
+				/* TODO: Show dialog with EditText (song name) and call insert song method from db */
+				break;
 
 		}
 		return super.onOptionsItemSelected(item);

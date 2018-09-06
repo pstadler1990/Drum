@@ -16,6 +16,8 @@ public class DB
 	public static final int MESSAGE_TYPE_DELETE_KIT_OK = 3;
 	public static final int MESSAGE_TYPE_KIT_EXISTS = 4;
 	public static final int MESSAGE_TYPE_GET_SOUNDKITS = 5;
+	public static final int MESSAGE_TYPE_GET_SONGS = 6;
+	public static final int MESSAGE_TYPE_INSERT_SONG_OK = 7;
 
 	private static final String soundDatabaseName = "DB_SOUND";
 	private SoundDatabase soundDatabase;
@@ -173,6 +175,51 @@ public class DB
 				Bundle bundle = new Bundle();
 				bundle.putBoolean("soundExists", exists);
 				message.setData(bundle);
+
+				if(handler != null) {
+					handler.onMessageReceived(message);
+				}
+			}
+		}).start();
+	}
+
+	public void getSongs(final IDBHandler handler)
+	{
+		new Thread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				Song[] songs = soundDatabase.getSongInterface().getSongs();
+
+				Message message = new Message();
+				Bundle bundle = new Bundle();
+
+				bundle.putParcelableArray("getSongs", songs);
+				message.what = MESSAGE_TYPE_GET_SONGS;
+				message.setData(bundle);
+
+				if(handler != null) {
+					handler.onMessageReceived(message);
+				}
+			}
+		}).start();
+	}
+
+	public void insertSong(final IDBHandler handler, final Song... songs)
+	{
+		new Thread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				for (Song song : songs)
+				{
+					soundDatabase.getSongInterface().insertSong(song);
+				}
+
+				Message message = new Message();
+				message.what = MESSAGE_TYPE_INSERT_SONG_OK;
 
 				if(handler != null) {
 					handler.onMessageReceived(message);
