@@ -23,12 +23,6 @@ public class DialogInstrument extends DialogFragment implements IChildFragment, 
 	private SoundkitDownloadedFragment soundkitDownloadedFragment;
 
 	@Override
-    public void onCreate(@Nullable Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-    }
-
-	@Override
 	public void onAttach(Context context)
 	{
 		super.onAttach(context);

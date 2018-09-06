@@ -18,6 +18,7 @@ public class DB
 	public static final int MESSAGE_TYPE_GET_SOUNDKITS = 5;
 	public static final int MESSAGE_TYPE_GET_SONGS = 6;
 	public static final int MESSAGE_TYPE_INSERT_SONG_OK = 7;
+	public static final int MESSAGE_TYPE_UPDATE_SONG_OK = 8;
 
 	private static final String soundDatabaseName = "DB_SOUND";
 	private SoundDatabase soundDatabase;
@@ -89,7 +90,7 @@ public class DB
 		}).start();
 	}
 
-	public void insertSound(final IDBHandler handler, final Sound... sounds)
+	public void insertSound(final IDBHandler handler, final Sound...sounds)
 	{
 		new Thread(new Runnable()
 		{
@@ -206,7 +207,7 @@ public class DB
 		}).start();
 	}
 
-	public void insertSong(final IDBHandler handler, final Song... songs)
+	public void insertSong(final IDBHandler handler, final Song...songs)
 	{
 		new Thread(new Runnable()
 		{
@@ -220,6 +221,28 @@ public class DB
 
 				Message message = new Message();
 				message.what = MESSAGE_TYPE_INSERT_SONG_OK;
+
+				if(handler != null) {
+					handler.onMessageReceived(message);
+				}
+			}
+		}).start();
+	}
+
+	public void updateSong(final IDBHandler handler, final Song song)
+	{
+		new Thread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				soundDatabase.getSongInterface().updateSong(song);
+
+				Message message = new Message();
+				message.what = MESSAGE_TYPE_UPDATE_SONG_OK;
+				Bundle bundle = new Bundle();
+				bundle.putParcelable("song", song);
+				message.setData(bundle);
 
 				if(handler != null) {
 					handler.onMessageReceived(message);

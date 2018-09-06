@@ -1,20 +1,28 @@
 package de.pstadler.drum;
 
+import android.content.DialogInterface;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
+import de.pstadler.drum.Database.Converter.SongPlaybackConverter;
+import de.pstadler.drum.Database.IDBHandler;
+import de.pstadler.drum.Database.Song;
 import de.pstadler.drum.Database.Sound;
 import de.pstadler.drum.Sound.Playback.IClock;
 import de.pstadler.drum.Sound.Playback.IPlaybackControl;
@@ -24,15 +32,19 @@ import de.pstadler.drum.Sound.Playback.PlaybackEngine;
 import de.pstadler.drum.Sound.Playback.Player;
 import de.pstadler.drum.Track.BarFragment;
 import de.pstadler.drum.Track.TrackFragment;
+import static de.pstadler.drum.Database.DB.MESSAGE_TYPE_UPDATE_SONG_OK;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, IClock, IPlaybackControl
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, IClock,
+		IPlaybackControl, IDBHandler
 {
 	public static final int TRACKS_MAX = 8;
 	public static final int PAGES_MAX = 10;	// TODO: Add limit to page create function!
     public static int pages = 0;
     private boolean loopPlayback = false;
     private boolean isPlaying = false;
+    private int bpm;
+    private Song currentSong;
     private ViewPager viewPager;
     private ScreenSlidePageAdapter pagerAdapter;
     private LinearLayout mainAppbar;
@@ -78,7 +90,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         playbackEngine = new PlaybackEngine(this);
 
+        /* TODO: if a project is loaded, get the saved bpm and set it here, else set default bpm */
 		mainBPM.setText("80");
+
+		/* TODO: Add bundle for song loading */
+		/* Create a blank new song */
+		currentSong = new Song("");
     }
 
 	@Override
@@ -173,6 +190,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+	public void synchronizeSounds(int trackId, Sound sound)
+	{
+		for(int p=0; p<pagerAdapter.getCount(); p++)
+		{
+			BarFragment fragment = (BarFragment) pagerAdapter.getItem(p);
+			while(fragment.isHidden());
+
+			TrackFragment trackFragment = (TrackFragment) fragment.getTracks().get(trackId);
+			trackFragment.setSound(sound);
+		}
+	}
+
     @Override
     public void onBackPressed() {
         if (viewPager.getCurrentItem() == 0) {
@@ -208,8 +237,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 					viewPager.setCurrentItem(0);
 
 					/* Get the user entered BPM, validate and set if valid */
-					int bpmText = Integer.parseInt(mainBPM.getText().toString());
-					boolean validBPM = playbackEngine.setBpmValidated(bpmText);
+					bpm = Integer.parseInt(mainBPM.getText().toString());
+					boolean validBPM = playbackEngine.setBpmValidated(bpm);
 					if(!validBPM) {
 						String bpmDefaultText = String.valueOf(PlaybackEngine.BPM_DEFAULT);
 						mainBPM.setText(bpmDefaultText);
@@ -228,25 +257,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
        Creates audio players, if needed */
     private void preparePlayback()
 	{
-		/* Preload the whole song */
-		ArrayList<PlaybackArray[]> playbackArrays = new ArrayList<>();
-
-		/* (BLOCKING) Activate each bar / page one after the other
-		   Collect track information and convert it via convertBarToArray
-		   Add the new track information to the playbackArrays list */
-		for(int p=0; p<pagerAdapter.getCount(); p++)
-		{
-			viewPager.setCurrentItem(p);
-			BarFragment fragment = (BarFragment) pagerAdapter.getItem(p);
-			while(fragment.isHidden());
-			PlaybackArray[] playbackArray = PlaybackConverter.convertBarToArray(fragment);
-
-			playbackArrays.add(playbackArray);
-		}
-
-		/* Combine the PlaybackArrays list (contains all PlayBackArrays of all tracks)
-		   to a single PlaybackArray per track */
-		PlaybackArray[] trackPlaybackArray = PlaybackConverter.convertPlaybackArrayListToPlaybackArrayForEachTrack(playbackArrays);
+		PlaybackArray[] trackPlaybackArray = convertPlayback();
 
 		/* Create players if needed */
 		int availablePlayers = playbackEngine.getPlayers().length;
@@ -272,25 +283,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		}
 	}
 
+	private PlaybackArray[] convertPlayback()
+	{
+		/* Preload the whole song */
+		ArrayList<PlaybackArray[]> playbackArrays = new ArrayList<>();
+
+		/* (BLOCKING) Activate each bar / page one after the other
+		   Collect track information and convert it via convertBarToArray
+		   Add the new track information to the playbackArrays list */
+		for(int p=0; p<pagerAdapter.getCount(); p++)
+		{
+			viewPager.setCurrentItem(p);
+			BarFragment fragment = (BarFragment) pagerAdapter.getItem(p);
+			while(fragment.isHidden());
+			PlaybackArray[] playbackArray = PlaybackConverter.convertBarToArray(fragment);
+
+			playbackArrays.add(playbackArray);
+		}
+
+		/* Combine the PlaybackArrays list (contains all PlayBackArrays of all tracks)
+		   to a single PlaybackArray per track */
+		return PlaybackConverter.convertPlaybackArrayListToPlaybackArrayForEachTrack(playbackArrays);
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		switch(item.getItemId())
 		{
 			case R.id.menu_main_add_page:
-				/* */
 				if(!isPlaying) {
 					createNewPage();
 				}
 				break;
 			case R.id.menu_main_add_track:
-				/* */
 				if(!isPlaying) {
 					createNewTrackSynchronized();
 				}
 				break;
 			case R.id.menu_main_loop_enable:
-				/* */
 				if(item.isChecked()) {
 					loopPlayback = false;
 					item.setChecked(false);
@@ -300,7 +331,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 				}
 				break;
 			case R.id.menu_main_save_track:
-				/* TODO: Show dialog with EditText (song name) and call insert song method from db */
+				saveSong();
 				break;
 
 		}
@@ -405,15 +436,88 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		}
 	}
 
-	public void synchronizeSounds(int trackId, Sound sound)
+	private void saveSong()
 	{
-		for(int p=0; p<pagerAdapter.getCount(); p++)
+		if(currentSong.name.length() == 0)
 		{
-			BarFragment fragment = (BarFragment) pagerAdapter.getItem(p);
-			while(fragment.isHidden());
+			/* The name has not been set yet, so show a dialog requesting the name */
+			final View dialogView = getLayoutInflater().inflate(R.layout.dialog_song, null);
 
-			TrackFragment trackFragment = (TrackFragment) fragment.getTracks().get(trackId);
-			trackFragment.setSound(sound);
+			AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
+					.setPositiveButton(getString(R.string.dialog_song_save_submit), new DialogInterface.OnClickListener()
+					{
+						@Override
+						public void onClick(DialogInterface dialog, int which)
+						{
+							EditText dialogName = dialogView.findViewById(R.id.dialog_save_name);
+							String tempName = dialogName.getText().toString();
+							if(tempName.length() > 0)
+							{
+								currentSong.name = tempName;
+
+								updateSongInformation();
+
+								((App)getApplication()).getDatabase().insertSong(MainActivity.this, currentSong);
+							}
+						}
+					})
+					.setNegativeButton(getString(R.string.action_cancel), new DialogInterface.OnClickListener()
+					{
+						@Override
+						public void onClick(DialogInterface dialog, int which)
+						{
+							dialog.cancel();
+						}
+					})
+					.setTitle(getString(R.string.dialog_song_save))
+					.setView(dialogView)
+					.create();
+
+			dialog.show();
+		}
+		else
+		{
+			updateSongInformation();
+
+			/* Name has already been set, update the current song in the database */
+			((App)getApplication()).getDatabase().updateSong(this, currentSong);
+		}
+	}
+
+	private void updateSongInformation()
+	{
+		PlaybackArray[] trackPlaybackArray = convertPlayback();
+		currentSong.tracks = trackPlaybackArray.length;
+		ArrayList<Sound> tempSounds = new ArrayList<>();
+		ArrayList<String> tempStrings = new ArrayList<>();
+
+		for(PlaybackArray p : trackPlaybackArray)
+		{
+			tempSounds.add(p.getSound());
+			tempStrings.add(SongPlaybackConverter.getPlaybackString(p.playbackArray));
+		}
+		currentSong.sounds = tempSounds.toArray(new Sound[0]);
+		currentSong.bars = pagerAdapter.getCount();
+		currentSong.playbackStrings = tempStrings;
+		currentSong.bpm = bpm;
+	}
+
+	@Override
+	public void onMessageReceived(Message message)
+	{
+		switch (message.what)
+		{
+			case MESSAGE_TYPE_UPDATE_SONG_OK:
+				Song updatedSong = message.getData().getParcelable("song");
+				if(updatedSong != null)
+				{
+					currentSong = updatedSong;
+					Toast.makeText(this, getString(R.string.toast_song_saved_ok), Toast.LENGTH_SHORT).show();
+				}
+				else {
+					Toast.makeText(this, getString(R.string.toast_song_saved_fail), Toast.LENGTH_SHORT).show();
+				}
+				break;
 		}
 	}
 

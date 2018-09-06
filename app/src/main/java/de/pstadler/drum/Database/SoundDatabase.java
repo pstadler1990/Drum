@@ -9,7 +9,7 @@ import de.pstadler.drum.Database.Converter.SongSoundConverter;
 
 
 @TypeConverters({SongSoundConverter.class, SongPlaybackConverter.class})
-@Database(entities = {Sound.class, Song.class}, version = 4, exportSchema = false)
+@Database(entities = {Sound.class, Song.class}, version = 5, exportSchema = false)
 public abstract class SoundDatabase extends RoomDatabase
 {
 	public abstract ISound getSoundInterface();

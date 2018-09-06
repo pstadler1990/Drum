@@ -5,6 +5,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import java.util.List;
 
 
 @Entity
@@ -18,13 +19,15 @@ public class Song implements Parcelable
 
 	public int bars;
 
+	public int bpm;
+
 	/* Store the track information:
 	   sounds[] contains a sound object for each track 0..n
 	   playbackArrays[] contains a boolean array for each track 0..n
 	   Each sound and playback array is later mapped to a newly created page / bar and track */
 	public Sound[] sounds;
 
-	public boolean[] playbackArrays;
+	public List<String> playbackStrings;
 
 
 	public Song(@NonNull String name)
@@ -38,7 +41,7 @@ public class Song implements Parcelable
 		tracks = in.readInt();
 		bars = in.readInt();
 		sounds = in.createTypedArray(Sound.CREATOR);
-		playbackArrays = in.createBooleanArray();
+		playbackStrings = in.createStringArrayList();
 	}
 
 	public static final Creator<Song> CREATOR = new Creator<Song>()
@@ -69,6 +72,6 @@ public class Song implements Parcelable
 		dest.writeInt(tracks);
 		dest.writeInt(bars);
 		dest.writeTypedArray(sounds, 0);
-		dest.writeBooleanArray(playbackArrays);
+		dest.writeList(playbackStrings);
 	}
 }

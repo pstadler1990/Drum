@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 
 @Dao
@@ -14,6 +15,9 @@ public interface ISong
 
 	@Delete
 	void deleteSong(Song song);
+
+	@Update
+	void updateSong(Song song);
 
 	@Query("SELECT * FROM Song")
 	Song[] getSongs();

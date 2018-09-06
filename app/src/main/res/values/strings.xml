@@ -16,7 +16,12 @@
     <string name="menu_add_track">Add track</string>
     <string name="menu_add_bar">Add bar</string>
     <string name="menu_loop">Loop</string>
-    <string name="menu_save_track">Save song</string>
+    <string name="menu_save_track">Save project</string>
+
+    <string name="dialog_song_save">Save project as..</string>
+    <string name="dialog_song_save_submit">Save</string>
+    <string name="toast_song_saved_ok">Project successfully saved</string>
+    <string name="toast_song_saved_fail">Sorry, there was an error while saving the project..</string>
 
     <string name="res_sound_name_template">%1$s.wav</string>
     <string name="res_sound_root_file_raw">https://github.com/pstadler1990/Drum/blob/master/kits/%1$s?raw=true</string>
