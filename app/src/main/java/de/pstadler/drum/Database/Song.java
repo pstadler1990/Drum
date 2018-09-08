@@ -5,6 +5,8 @@ import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -40,8 +42,10 @@ public class Song implements Parcelable
 		name = in.readString();
 		tracks = in.readInt();
 		bars = in.readInt();
+		bpm = in.readInt();
 		sounds = in.createTypedArray(Sound.CREATOR);
-		playbackStrings = in.createStringArrayList();
+		playbackStrings = new ArrayList<>();
+		in.readList(playbackStrings, null);
 	}
 
 	public static final Creator<Song> CREATOR = new Creator<Song>()
@@ -71,6 +75,7 @@ public class Song implements Parcelable
 		dest.writeString(name);
 		dest.writeInt(tracks);
 		dest.writeInt(bars);
+		dest.writeInt(bpm);
 		dest.writeTypedArray(sounds, 0);
 		dest.writeList(playbackStrings);
 	}

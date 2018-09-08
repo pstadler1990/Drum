@@ -2,6 +2,7 @@ package de.pstadler.drum;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.Parcelable;
@@ -84,7 +85,37 @@ public class LoadProjectActivity extends AppCompatActivity implements IDBHandler
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 			{
-				System.out.println("blub");
+				final Song song = (Song) listViewProjects.getItemAtPosition(position);
+
+				AlertDialog dialog = new AlertDialog.Builder(LoadProjectActivity.this)
+						.setPositiveButton("Load", new DialogInterface.OnClickListener()
+						{
+							@Override
+							public void onClick(DialogInterface dialog, int which)
+							{
+								/* Start the main activity (the drum editor) with a payload
+								   containing the selected song */
+								if (song != null)
+								{
+									Intent intent = new Intent(LoadProjectActivity.this, MainActivity.class);
+									intent.putExtra("loadProject", song);
+									startActivity(intent);
+								}
+							}
+						})
+						.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+						{
+							@Override
+							public void onClick(DialogInterface dialog, int which)
+							{
+								dialog.cancel();
+							}
+						})
+						.setTitle("Load project?")
+						.setMessage(song.name)
+						.create();
+
+				dialog.show();
 			}
 		});
 

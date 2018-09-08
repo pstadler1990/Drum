@@ -14,9 +14,10 @@ public class SongSoundConverter
 
 		int soundCount = fields.length / 3;
 		Sound[] sounds = new Sound[soundCount];
-		for(int i=0; i<soundCount; i++)
+		for(int i=0, j=0; i<fields.length; i+=3)
 		{
-			sounds[i] = new Sound(fields[0], fields[1], fields[2]);
+			sounds[j] = new Sound(fields[i], fields[i+1], fields[i+2]);
+			j++;
 		}
 		return sounds;
 	}

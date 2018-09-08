@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static int pages = 0;
     private boolean loopPlayback = false;
     private boolean isPlaying = false;
-    private int bpm;
+    private int bpm = 80;
     private Song currentSong;
     private ViewPager viewPager;
     private ScreenSlidePageAdapter pagerAdapter;
@@ -76,26 +76,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         buttonPlayStop.setOnClickListener(this);
 
-        // Create first page
+        /* Create pages and playback engine */
         barFragments = new ArrayList<>();
         pages = 0;
+		playbackEngine = new PlaybackEngine(this);
 
-        if(savedInstanceState != null)
-        {
-            int oldPages = savedInstanceState.getInt("pages");
-            createNewPage(oldPages);
-        }
-        else
-            createNewPage();
+		createNewPage();
 
-        playbackEngine = new PlaybackEngine(this);
+        boolean hasProject = false;
+        /* If the activity has been called through the LoadProjectActivity (= load a project),
+           get the song from the intent's payload and recover everything */
+        if(getIntent().hasExtra("loadProject"))
+		{
+			Song song = (Song) getIntent().getParcelableExtra("loadProject");
+			if(song != null)
+			{
+				hasProject = true;
+				bpm = song.bpm;
+				currentSong = song;
+			}
+		}
 
-        /* TODO: if a project is loaded, get the saved bpm and set it here, else set default bpm */
-		mainBPM.setText("80");
+		if(!hasProject)
+		{
+			/* TODO: Add bundle for song loading */
+			/* Create a blank new song */
+			currentSong = new Song("");
+		}
 
-		/* TODO: Add bundle for song loading */
-		/* Create a blank new song */
-		currentSong = new Song("");
+		mainBPM.setText(String.valueOf(bpm));
     }
 
 	@Override

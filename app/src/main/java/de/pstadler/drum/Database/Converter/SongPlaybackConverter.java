@@ -18,10 +18,10 @@ public class SongPlaybackConverter
 		String trackString = "";
 		ArrayList<String> playbackList = new ArrayList<>();
 
-		for(int i=0; i<boolCount; i++)
+		for(int i=0, j=1; i<boolCount; i++, j++)
 		{
 			trackString += stringArray[i];
-			if(i%8 ==0)
+			if(j%8 == 0 && i>0)
 			{
 				playbackList.add(trackString);
 				trackString = "";
