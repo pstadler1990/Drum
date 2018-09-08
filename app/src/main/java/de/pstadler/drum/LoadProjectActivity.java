@@ -75,7 +75,7 @@ public class LoadProjectActivity extends AppCompatActivity implements IDBHandler
 
 				dialog.show();
 
-				return false;
+				return true;
 			}
 		});
 

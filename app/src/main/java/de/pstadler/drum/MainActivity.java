@@ -556,7 +556,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		currentSong.sounds = tempSounds.toArray(new Sound[0]);
 		currentSong.bars = pagerAdapter.getCount();
 		currentSong.playbackStrings = tempStrings;
-		currentSong.bpm = bpm;
+		currentSong.bpm = Integer.parseInt(mainBPM.getText().toString());
 	}
 
 	@Override
@@ -565,17 +565,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		switch (message.what)
 		{
 			case MESSAGE_TYPE_UPDATE_SONG_OK:
-				Song updatedSong = message.getData().getParcelable("song");
-				if(updatedSong != null)
-				{
-					currentSong = updatedSong;
-					//Toast.makeText(this, getString(R.string.toast_song_saved_ok), Toast.LENGTH_SHORT).show();
-					//TODO: toast has to run on main ui thread
-				}
-				else {
-					//Toast.makeText(this, getString(R.string.toast_song_saved_fail), Toast.LENGTH_SHORT).show();
-					//TODO: toast has to run on main ui thread
-				}
+				((App)getApplicationContext()).getDatabase().getSongs(this);
 				break;
 		}
 	}

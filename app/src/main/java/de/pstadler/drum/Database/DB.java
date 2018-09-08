@@ -8,7 +8,7 @@ import de.pstadler.drum.FileAccess.FileAccessor;
 import de.pstadler.drum.Sound.Soundkit;
 
 
-public class DB
+public class DB implements IDBHandler
 {
 	public static final int MESSAGE_TYPE_UNDEFINED = 0;
 	public static final int MESSAGE_TYPE_GET_SOUNDS = 1;
@@ -208,20 +208,21 @@ public class DB
 		}).start();
 	}
 
-	public void insertSong(final IDBHandler handler, final Song...songs)
+	public void insertSong(final IDBHandler handler, final Song song)
 	{
 		new Thread(new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				for (Song song : songs)
-				{
-					soundDatabase.getSongInterface().insertSong(song);
-				}
+				soundDatabase.getSongInterface().insertSong(song);
+
+				Bundle bundle = new Bundle();
+				bundle.putParcelable("getSong", song);
 
 				Message message = new Message();
 				message.what = MESSAGE_TYPE_INSERT_SONG_OK;
+				message.setData(bundle);
 
 				if(handler != null) {
 					handler.onMessageReceived(message);
@@ -237,13 +238,11 @@ public class DB
 			@Override
 			public void run()
 			{
-				soundDatabase.getSongInterface().updateSong(song);
+				soundDatabase.getSongInterface().deleteSong(song);
+				insertSong(DB.this, song);
 
 				Message message = new Message();
 				message.what = MESSAGE_TYPE_UPDATE_SONG_OK;
-				Bundle bundle = new Bundle();
-				bundle.putParcelable("song", song);
-				message.setData(bundle);
 
 				if(handler != null) {
 					handler.onMessageReceived(message);
@@ -273,4 +272,19 @@ public class DB
 		}).start();
 	}
 
+	@Override
+	public void onMessageReceived(Message message)
+	{
+		switch (message.what)
+		{
+			case MESSAGE_TYPE_INSERT_SONG_OK:
+				Song song = message.getData().getParcelable("getSong");
+				Message messageUpdate = new Message();
+				messageUpdate.what = MESSAGE_TYPE_UPDATE_SONG_OK;
+				Bundle bundle = new Bundle();
+				bundle.putParcelable("song", song);
+				message.setData(bundle);
+				break;
+		}
+	}
 }
