@@ -19,5 +19,15 @@
 			"cymbal" : "french_techno/cymbal.wav",
 			"crash" : "french_techno/crash.wav"
 		}
-	}
+	},
+	{
+		"kit-name": "RnB",
+		"kit-elements" :
+		{
+			"hh": "rnb/hh.wav",
+			"snare": "rnb/snare.wav",
+			"kick": "rnb/kick.wav",
+			"closed-hh": "rnb/closedhh.wav"
+		}
+	}	
 ]
