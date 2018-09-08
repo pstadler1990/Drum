@@ -113,13 +113,16 @@ public class BarFragment extends Fragment implements ITrackListener
     public void restoreTrackInformation(Bundle bundle)
     {
         List<Fragment> tracks = getTracks();
-        for(int i=0; i < getTracks().size(); i++)
-        {
-            TrackFragment tf = (TrackFragment) tracks.get(i);
-            String key = String.format("buttonStates_%d", i);
-            boolean[] savedStates = bundle.getBooleanArray(key);
-            tf.setButtonStates(savedStates);
-        }
+        if(tracks != null)
+		{
+			for (int i = 0; i < getTracks().size(); i++)
+			{
+				TrackFragment tf = (TrackFragment) tracks.get(i);
+				String key = String.format("buttonStates_%d", i);
+				boolean[] savedStates = bundle.getBooleanArray(key);
+				tf.setButtonStates(savedStates);
+			}
+		}
     }
 
     @Override
@@ -130,11 +133,14 @@ public class BarFragment extends Fragment implements ITrackListener
         int i = 0;
         for(Fragment f : tracks)
         {
-            TrackFragment tf = (TrackFragment)f;
-            boolean[] buttonStates = tf.getButtonStates();
-            String bId = String.format("buttonStates_%d", i);
-            outState.putBooleanArray(bId, buttonStates);
-            i++;
+        	if(f instanceof TrackFragment)
+			{
+				TrackFragment tf = (TrackFragment) f;
+				boolean[] buttonStates = tf.getButtonStates();
+				String bId = String.format("buttonStates_%d", i);
+				outState.putBooleanArray(bId, buttonStates);
+			}
+			i++;
         }
 
         super.onSaveInstanceState(outState);

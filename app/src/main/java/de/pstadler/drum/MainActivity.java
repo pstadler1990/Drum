@@ -245,11 +245,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	{
 		for(int p=0; p<pagerAdapter.getCount(); p++)
 		{
+			viewPager.setCurrentItem(p);
 			BarFragment fragment = (BarFragment) pagerAdapter.getItem(p);
 			while(fragment.isHidden());
 
-			TrackFragment trackFragment = (TrackFragment) fragment.getTracks().get(trackId);
-			trackFragment.setSound(sound);
+			List<Fragment> tracks = fragment.getTracks();
+			if(tracks != null)
+			{
+				TrackFragment trackFragment = (TrackFragment) fragment.getTracks().get(trackId);
+				trackFragment.setSound(sound);
+			}
 		}
 	}
 
