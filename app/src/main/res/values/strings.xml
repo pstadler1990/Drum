@@ -23,6 +23,8 @@
     <string name="toast_song_saved_ok">Project successfully saved</string>
     <string name="toast_song_saved_fail">Sorry, there was an error while saving the project..</string>
 
+    <string name="list_empty">No items yet :(</string>
+
     <string name="res_sound_name_template">%1$s.wav</string>
     <string name="res_sound_root_file_raw">https://github.com/pstadler1990/Drum/blob/master/kits/%1$s?raw=true</string>
     <string name="res_sound_kitlist">https://raw.githubusercontent.com/pstadler1990/Drum/master/kits/kitlist.json</string>

@@ -11,4 +11,13 @@
         android:id="@+id/load_list_projects">
     </ListView>
 
+    <TextView
+        android:id="@+id/empty_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/list_empty"
+        android:visibility="gone"
+        android:paddingLeft="@dimen/padding_list"
+        android:textSize="@dimen/text_size_large" />
+
 </LinearLayout>

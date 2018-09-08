@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import de.pstadler.drum.Database.IDBHandler;
 import de.pstadler.drum.Database.Song;
@@ -36,9 +35,10 @@ public class LoadProjectActivity extends AppCompatActivity implements IDBHandler
 
 		projects = new ArrayList<>();
         projectAdapter = new ProjectAdapter(this, projects);
-        listViewProjects.setAdapter(projectAdapter);
 		ViewGroup listViewHeader = (ViewGroup)getLayoutInflater().inflate(R.layout.song_item_header, listViewProjects, false);
        	listViewProjects.addHeaderView(listViewHeader);
+		listViewProjects.setEmptyView(findViewById(R.id.empty_list));
+		listViewProjects.setAdapter(projectAdapter);
 
         /* A long click on an item calls the delete dialog */
         listViewProjects.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()

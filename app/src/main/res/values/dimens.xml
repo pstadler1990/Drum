@@ -10,4 +10,5 @@
     <dimen name="text_size_large">20sp</dimen>
     <dimen name="text_size_larger">25sp</dimen>
     <dimen name="padding_default">8dp</dimen>
+    <dimen name="padding_list">20dp</dimen>
 </resources>

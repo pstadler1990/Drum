@@ -70,9 +70,10 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 		View rootView = inflater.inflate(R.layout.fragment_download_soundkits, container, false);
 
 		listViewAvailableKits = rootView.findViewById(R.id.soundkits_list_kits);
-		listViewAvailableKits.setAdapter(soundkitAdapter);
 		ViewGroup listViewHeader = (ViewGroup)getLayoutInflater().inflate(R.layout.soundkit_group_header, listViewAvailableKits, false);
 		listViewAvailableKits.addHeaderView(listViewHeader);
+		listViewAvailableKits.setEmptyView(rootView.findViewById(R.id.empty_list));
+		listViewAvailableKits.setAdapter(soundkitAdapter);
 
 		/* Attach a long click handler for the items, but only if the parent activity / fragment
 		   implements the required interface */

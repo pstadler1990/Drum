@@ -32,7 +32,7 @@ public class ProjectAdapter extends ArrayAdapter<Song>
 		if(v == null)
 		{
 			LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			v = vi.inflate(R.layout.song_item, parent);
+			v = vi.inflate(R.layout.song_item, null);
 		}
 
 		TextView name = v.findViewById(R.id.song_item_name);
