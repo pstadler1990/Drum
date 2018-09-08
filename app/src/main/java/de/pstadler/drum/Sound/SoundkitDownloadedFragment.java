@@ -144,7 +144,7 @@ public class SoundkitDownloadedFragment extends Fragment implements ISoundManage
 
 						dialog.show();
 					}
-					return false;
+					return true;
 				}
 			});
 		}

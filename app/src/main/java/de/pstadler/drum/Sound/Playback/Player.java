@@ -37,7 +37,13 @@ public class Player extends MediaPlayer implements IClock
 	{
 		if(readyForPlayback && playbackArray.getPlaybackArray()[(barId * 8) + stepId])		// TODO: replace 8 with track button count constant
 		{
-			start();
+			if(isPlaying())
+			{
+				seekTo(0);
+			}
+			else {
+				start();
+			}
 		}
 	}
 
