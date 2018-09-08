@@ -579,6 +579,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		{
 			case MESSAGE_TYPE_UPDATE_SONG_OK:
 				((App)getApplicationContext()).getDatabase().getSongs(this);
+
+				runOnUiThread(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						Toast.makeText(MainActivity.this, getString(R.string.toast_song_saved_ok), Toast.LENGTH_SHORT).show();
+					}
+				});
+
 				break;
 		}
 	}
