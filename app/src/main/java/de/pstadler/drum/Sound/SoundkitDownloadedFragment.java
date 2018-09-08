@@ -104,13 +104,11 @@ public class SoundkitDownloadedFragment extends Fragment implements ISoundManage
 				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
 				{
 					long packedPosition = listViewDownloadedKits.getExpandableListPosition(position);
-
 					int itemType = ExpandableListView.getPackedPositionType(packedPosition);
-					int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
 
 					if (itemType == ExpandableListView.PACKED_POSITION_TYPE_GROUP)
 					{
-						final Soundkit soundkit = (Soundkit) listViewDownloadedKits.getItemAtPosition(groupPosition);
+						final Soundkit soundkit = (Soundkit) listViewDownloadedKits.getItemAtPosition(position);
 
 						/* Show dialog to confirm the download of the selected soundkit */
 						AlertDialog dialog = new AlertDialog.Builder(getContext())
@@ -124,11 +122,9 @@ public class SoundkitDownloadedFragment extends Fragment implements ISoundManage
 										   a ClassCastException else */
 										if (soundkit != null)
 										{
-											try
-											{
+											try {
 												((App) getActivity().getApplicationContext()).getDatabase().deleteKit((IDBHandler) getContext(), soundkit.name);
-											} catch (ClassCastException e)
-											{
+											} catch (ClassCastException e) {
 												throw new ClassCastException("Must implement IDBHandler interface!");
 											}
 										}
@@ -137,8 +133,7 @@ public class SoundkitDownloadedFragment extends Fragment implements ISoundManage
 								.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
 								{
 									@Override
-									public void onClick(DialogInterface dialog, int which)
-									{
+									public void onClick(DialogInterface dialog, int which) {
 										dialog.cancel();
 									}
 								})
