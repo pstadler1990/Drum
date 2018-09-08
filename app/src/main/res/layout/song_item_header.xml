@@ -6,42 +6,47 @@
     android:orientation="horizontal"
     android:padding="5dp"
     android:baselineAligned="false"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:background="@color/colorAccent">
 
     <TextView
-        android:id="@+id/song_item_name"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:gravity="top"
+        android:gravity="center_vertical"
         android:textSize="@dimen/text_size_large"
         android:layout_weight=".4"
-        android:text="Project name"/>
+        android:text="Project name"
+        android:textStyle="bold"
+        android:textColor="@color/colorWhite"/>
 
     <TextView
-        android:id="@+id/song_item_tracks"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:gravity="top"
+        android:gravity="center_vertical"
         android:textSize="@dimen/text_size_large"
         android:layout_weight=".2"
-        android:text="Tracks"/>
+        android:text="Tracks"
+        android:textStyle="bold"
+        android:textColor="@color/colorWhite"/>
 
     <TextView
-        android:id="@+id/song_item_bars"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:gravity="top"
+        android:gravity="center_vertical"
         android:textSize="@dimen/text_size_large"
         android:layout_weight=".2"
-        android:text="Bars"/>
+        android:text="Bars"
+        android:textStyle="bold"
+        android:textColor="@color/colorWhite"/>
 
     <TextView
-        android:id="@+id/song_item_bpm"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:gravity="top"
+        android:gravity="center_vertical"
         android:textSize="@dimen/text_size_large"
         android:layout_weight=".2"
-        android:text="BPM"/>
+        android:text="BPM"
+        android:textStyle="bold"
+        android:textColor="@color/colorWhite"/>
 
 </LinearLayout>

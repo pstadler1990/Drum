@@ -74,6 +74,8 @@ public class SoundkitDownloadedFragment extends Fragment implements ISoundManage
 
 		listViewDownloadedKits = rootView.findViewById(R.id.soundkits_list_kits);
 		listViewDownloadedKits.setAdapter(soundkitAdapter);
+		ViewGroup listViewHeader = (ViewGroup)getLayoutInflater().inflate(R.layout.soundkit_group_header, listViewDownloadedKits, false);
+		listViewDownloadedKits.addHeaderView(listViewHeader);
 
 		/* A click on one of the child items triggers the onSoundSelected event */
 		listViewDownloadedKits.setOnChildClickListener(new ExpandableListView.OnChildClickListener()

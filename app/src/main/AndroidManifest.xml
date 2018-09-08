@@ -15,12 +15,12 @@
         <activity android:name=".MainMenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".SoundKitsActivity"></activity>
+        <activity android:name=".SoundKitsActivity" />
+        <activity android:name=".LoadProjectActivity" />
     </application>
 
 </manifest>

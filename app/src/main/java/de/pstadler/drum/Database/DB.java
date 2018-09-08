@@ -19,6 +19,7 @@ public class DB
 	public static final int MESSAGE_TYPE_GET_SONGS = 6;
 	public static final int MESSAGE_TYPE_INSERT_SONG_OK = 7;
 	public static final int MESSAGE_TYPE_UPDATE_SONG_OK = 8;
+	public static final int MESSAGE_TYPE_DELETE_SONG_OK = 9;
 
 	private static final String soundDatabaseName = "DB_SOUND";
 	private SoundDatabase soundDatabase;
@@ -243,6 +244,27 @@ public class DB
 				Bundle bundle = new Bundle();
 				bundle.putParcelable("song", song);
 				message.setData(bundle);
+
+				if(handler != null) {
+					handler.onMessageReceived(message);
+				}
+			}
+		}).start();
+	}
+
+	public void deleteSong(final IDBHandler handler, final Song...songs)
+	{
+		new Thread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				for(Song song : songs) {
+					soundDatabase.getSongInterface().deleteSong(song);
+				}
+
+				Message message = new Message();
+				message.what = MESSAGE_TYPE_DELETE_SONG_OK;
 
 				if(handler != null) {
 					handler.onMessageReceived(message);

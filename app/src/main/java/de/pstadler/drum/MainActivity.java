@@ -512,10 +512,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 				if(updatedSong != null)
 				{
 					currentSong = updatedSong;
-					Toast.makeText(this, getString(R.string.toast_song_saved_ok), Toast.LENGTH_SHORT).show();
+					//Toast.makeText(this, getString(R.string.toast_song_saved_ok), Toast.LENGTH_SHORT).show();
+					//TODO: toast has to run on main ui thread
 				}
 				else {
-					Toast.makeText(this, getString(R.string.toast_song_saved_fail), Toast.LENGTH_SHORT).show();
+					//Toast.makeText(this, getString(R.string.toast_song_saved_fail), Toast.LENGTH_SHORT).show();
+					//TODO: toast has to run on main ui thread
 				}
 				break;
 		}

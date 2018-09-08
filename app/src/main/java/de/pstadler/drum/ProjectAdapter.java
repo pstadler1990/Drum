@@ -32,14 +32,26 @@ public class ProjectAdapter extends ArrayAdapter<Song>
 		if(v == null)
 		{
 			LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			v = vi.inflate(R.layout.soundkit_group, null);
+			v = vi.inflate(R.layout.song_item, parent);
 		}
 
 		TextView name = v.findViewById(R.id.song_item_name);
+		TextView tracks = v.findViewById(R.id.song_item_tracks);
+		TextView bars = v.findViewById(R.id.song_item_bars);
+		TextView bpm = v.findViewById(R.id.song_item_bpm);
 
 		Song song = songs.get(position);
 
-		name.setText(song.name);
+		if(name != null) {
+			name.setText(song.name);
+		}
+		else {
+			name.setText("no name");	// TODO: hard coded
+		}
+
+		tracks.setText(String.valueOf(song.tracks));
+		bars.setText(String.valueOf(song.bars));
+		bpm.setText(String.valueOf(song.bpm));
 
 		return v;
 	}

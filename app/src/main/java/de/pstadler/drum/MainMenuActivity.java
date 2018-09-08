@@ -7,21 +7,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+
 public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener
 {
-    private Button buttonNewTrack;
-    private Button buttonManageKits;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mainmenu);
 
-        buttonNewTrack = findViewById(R.id.button_new_track);
+        Button buttonNewTrack = findViewById(R.id.button_new_track);
         buttonNewTrack.setOnClickListener(this);
-        buttonManageKits = findViewById(R.id.button_manage_kits);
+        Button buttonManageKits = findViewById(R.id.button_manage_kits);
         buttonManageKits.setOnClickListener(this);
+        Button buttonLoadProjects = findViewById(R.id.button_load_track);
+        buttonLoadProjects.setOnClickListener(this);
     }
 
     @Override
@@ -37,6 +37,9 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 				Intent intentManageKits = new Intent(this, SoundKitsActivity.class);
 				startActivity(intentManageKits);
 				break;
+			case R.id.button_load_track:
+				Intent intentProjects = new Intent(this, LoadProjectActivity.class);
+				startActivity(intentProjects);
 		}
 
     }
