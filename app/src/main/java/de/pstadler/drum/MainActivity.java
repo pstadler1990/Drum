@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean loopPlayback = false;
     private boolean isPlaying = false;
     private boolean loadProject = false;
+    private int loadProjectCreated = 0;
     private int bpm = 80;
     private Song currentSong;
     private ViewPager viewPager;
@@ -188,6 +189,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 				tracksCreated++;
 			}
 			barFragment.restoreTrackInformation(bundle);
+		}
+
+		loadProjectCreated++;
+		if(loadProjectCreated >= currentSong.bars)
+		{
+			loadProject = false;
+			loadProjectCreated = 0;
 		}
 
 		return tracksCreated;
