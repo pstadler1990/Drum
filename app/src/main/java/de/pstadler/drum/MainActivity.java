@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static int pages = 0;
     private boolean loopPlayback = false;
     private boolean isPlaying = false;
+    private boolean loadProject = false;
     private int bpm = 80;
     private Song currentSong;
     private ViewPager viewPager;
@@ -79,11 +80,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         /* Create pages and playback engine */
         barFragments = new ArrayList<>();
         pages = 0;
+		BarFragment.barCounter = 0;
+
 		playbackEngine = new PlaybackEngine(this);
 
-		createNewPage();
-
-        boolean hasProject = false;
         /* If the activity has been called through the LoadProjectActivity (= load a project),
            get the song from the intent's payload and recover everything */
         if(getIntent().hasExtra("loadProject"))
@@ -91,17 +91,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 			Song song = (Song) getIntent().getParcelableExtra("loadProject");
 			if(song != null)
 			{
-				hasProject = true;
+				loadProject = true;
 				bpm = song.bpm;
 				currentSong = song;
+
+				createNewPage(song.bars);
 			}
 		}
 
-		if(!hasProject)
+		if(!loadProject)
 		{
-			/* TODO: Add bundle for song loading */
 			/* Create a blank new song */
 			currentSong = new Song("");
+			createNewPage();
 		}
 
 		mainBPM.setText(String.valueOf(bpm));
@@ -153,6 +155,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return tracksCreated;
     }
 
+    private int createTracksFromLoadedProject(Sound[] sounds, int barId)
+	{
+		if(sounds == null || sounds.length == 0) return 0;
+
+		int tracksCreated = 0;
+		List<boolean[]> playbackArrays = SongPlaybackConverter.getPlaybackArrays(currentSong.playbackStrings);
+
+		BarFragment barFragment = barFragments.get(barId);
+
+		if (barFragment != null)
+		{
+			Bundle bundle = new Bundle();
+
+			for (int i = 0; i < sounds.length; i++)
+			{
+				int curPlaybackArrayIndex;
+				if(currentSong.bars > 1) {
+					curPlaybackArrayIndex = barId + (i * currentSong.bars);
+				}
+				else {
+					curPlaybackArrayIndex = i;
+				}
+
+				int curTracks = barFragment.getTrackCount();
+
+				barFragment.onAddTrackListener(curTracks, sounds[i]);
+
+				String key = String.format("buttonStates_%d", i);
+				bundle.putBooleanArray(key, playbackArrays.get(curPlaybackArrayIndex));
+
+				tracksCreated++;
+			}
+			barFragment.restoreTrackInformation(bundle);
+		}
+
+		return tracksCreated;
+	}
+
     private void createNewTrackSynchronized(int...trackCount)
     {
         int n = (trackCount.length > 0) ? trackCount[0] : 1;
@@ -190,6 +230,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(src == null || dst == null) return;
 
         List<Fragment> srcTracks = src.getTracks();
+        if(srcTracks == null) return;
+
         for(Fragment f : srcTracks)
         {
             TrackFragment tf = (TrackFragment)f;
@@ -220,6 +262,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
         }
     }
+
+    public void barFragmentIsReady(BarFragment barFragment, int barCounter)
+	{
+		if(!loadProject) return;
+		createTracksFromLoadedProject(currentSong.sounds, barCounter);
+	}
 
     @Override
     protected void onSaveInstanceState(Bundle outState)
@@ -540,7 +588,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             super(fm);
         }
 
-        @Override
+		@Override
         public Fragment getItem(int position)
         {
             return barFragments.get(position);
