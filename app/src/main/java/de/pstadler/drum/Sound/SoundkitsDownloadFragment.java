@@ -13,8 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +27,7 @@ import de.pstadler.drum.R;
 import de.pstadler.drum.http.DownloadSound;
 import de.pstadler.drum.http.HttpDownloadTaskJSON;
 import de.pstadler.drum.http.IDownloadListener;
+import de.pstadler.drum.http.NetworkHelper;
 
 
 public class SoundkitsDownloadFragment extends Fragment implements IDownloadListener
@@ -43,7 +48,7 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 		soundkitAdapter = new SoundkitAdapter(getContext(), soundkits);
 
 		/* Downloads a list of soundkits from the github repository */
-		HttpDownloadTaskJSON downloadTask = new HttpDownloadTaskJSON(this);
+		HttpDownloadTaskJSON downloadTask = new HttpDownloadTaskJSON(new WeakReference<Context>(getContext()),this);
 		downloadTask.execute(getString(R.string.res_sound_kitlist));
 	}
 
@@ -141,7 +146,10 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 	@Override
 	public void onDownloadCanceled()
 	{
-		progressDialog.dismiss();
+		if(progressDialog != null && progressDialog.isShowing()) {
+			progressDialog.dismiss();
+		}
+		Toast.makeText(getContext(), getString(R.string.toast_download_fail), Toast.LENGTH_SHORT).show();
 	}
 
 	@Override

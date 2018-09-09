@@ -1,23 +1,33 @@
 package de.pstadler.drum.http;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 
 public class HttpDownloadTaskSound extends AsyncTask<DownloadSound, Integer, ArrayList<DownloadSound>>
 {
+	private WeakReference<Context> context;
 	private IDownloadListener downloadListener;
 
-	public HttpDownloadTaskSound(IDownloadListener downloadListener)
+	public HttpDownloadTaskSound(WeakReference<Context> context, IDownloadListener downloadListener)
 	{
+		this.context = context;
 		this.downloadListener = downloadListener;
 	}
 
 	@Override
 	protected void onPreExecute()
 	{
-		downloadListener.onDownloadStart();
+		NetworkHelper helper = new NetworkHelper(context.get());
+		if(helper.isNetworkAvailable()) {
+			downloadListener.onDownloadStart();
+		}
+		else {
+			cancel(true);
+		}
 	}
 
 	@Override

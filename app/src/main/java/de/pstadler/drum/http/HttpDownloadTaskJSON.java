@@ -1,23 +1,34 @@
 package de.pstadler.drum.http;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import org.json.JSONArray;
+
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 
 public class HttpDownloadTaskJSON extends AsyncTask<String, Integer, ArrayList<JSONArray>>
 {
+	private WeakReference<Context> context;
 	private IDownloadListener downloadListener;
 
-	public HttpDownloadTaskJSON(IDownloadListener downloadListener)
+	public HttpDownloadTaskJSON(WeakReference<Context> context, IDownloadListener downloadListener)
 	{
+		this.context = context;
 		this.downloadListener = downloadListener;
 	}
 
 	@Override
 	protected void onPreExecute()
 	{
-		downloadListener.onDownloadStart();
+		NetworkHelper helper = new NetworkHelper(context.get());
+		if(helper.isNetworkAvailable()) {
+			downloadListener.onDownloadStart();
+		}
+		else {
+			cancel(true);
+		}
 	}
 
 	@Override

@@ -1,16 +1,18 @@
 package de.pstadler.drum;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import de.pstadler.drum.Database.DBHelper;
 import de.pstadler.drum.Database.IDBHandler;
 import de.pstadler.drum.Database.Sound;
 import de.pstadler.drum.FileAccess.FileAccessor;
-import de.pstadler.drum.Sound.ISoundSelected;
 import de.pstadler.drum.Sound.Soundkit;
 import de.pstadler.drum.Sound.SoundkitDownloadedFragment;
 import de.pstadler.drum.Sound.SoundkitsDownloadFragment;
@@ -53,7 +55,7 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 	{
 		/* Show indicator */
 		progressDialog = new ProgressDialog(this);
-		progressDialog.setMessage("Downloading files...");
+		progressDialog.setMessage(getString(R.string.action_downloading));
 		progressDialog.show();
 	}
 
@@ -113,7 +115,10 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 	@Override
 	public void onDownloadCanceled()
 	{
-		progressDialog.cancel();
+		if(progressDialog != null && progressDialog.isShowing()) {
+			progressDialog.dismiss();
+		}
+		Toast.makeText(this, getString(R.string.toast_download_fail), Toast.LENGTH_SHORT).show();
 	}
 
 
@@ -125,7 +130,7 @@ public class SoundKitsActivity extends AppCompatActivity implements IDownloadLis
 
 		if(files.length > 0)
 		{
-			HttpDownloadTaskSound httpDownloadTaskSound = new HttpDownloadTaskSound(this);
+			HttpDownloadTaskSound httpDownloadTaskSound = new HttpDownloadTaskSound(new WeakReference<Context>(this),this);
 			httpDownloadTaskSound.execute(files);
 		}
 	}

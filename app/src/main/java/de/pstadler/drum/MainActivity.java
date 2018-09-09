@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		MenuInflater menuInflater = getMenuInflater();
 		menuInflater.inflate(R.menu.menu_mainactivity, menu);
 
-		/* Set loop menu item to not checked and white (only for tablets!) */
+		/* Set loop menu item to be unchecked and white */
 		MenuItem menuItemLoop = menu.findItem(R.id.menu_main_loop_enable);
 		menuItemLoop.setChecked(false);
 		menuItemLoop.setIcon(R.drawable.ic_loop_off_24dp);
