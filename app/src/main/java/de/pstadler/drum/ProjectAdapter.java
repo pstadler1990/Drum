@@ -46,7 +46,7 @@ public class ProjectAdapter extends ArrayAdapter<Song>
 			name.setText(song.name);
 		}
 		else {
-			name.setText("no name");	// TODO: hard coded
+			name.setText(getContext().getString(R.string.track_empty));
 		}
 
 		tracks.setText(String.valueOf(song.tracks));

@@ -113,7 +113,7 @@ public class SoundkitDownloadedFragment extends Fragment implements ISoundManage
 
 						/* Show dialog to confirm the download of the selected soundkit */
 						AlertDialog dialog = new AlertDialog.Builder(getContext())
-								.setPositiveButton("Delete kit", new DialogInterface.OnClickListener()
+								.setPositiveButton(getString(R.string.dialog_kit_delete), new DialogInterface.OnClickListener()
 								{
 									@Override
 									public void onClick(DialogInterface dialog, int which)
@@ -131,14 +131,14 @@ public class SoundkitDownloadedFragment extends Fragment implements ISoundManage
 										}
 									}
 								})
-								.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+								.setNegativeButton(getString(R.string.action_cancel), new DialogInterface.OnClickListener()
 								{
 									@Override
 									public void onClick(DialogInterface dialog, int which) {
 										dialog.cancel();
 									}
 								})
-								.setTitle("Delete soundkit?")
+								.setTitle(getString(R.string.dialog_kit_delete_q))
 								.setMessage(soundkit.name)
 								.create();
 

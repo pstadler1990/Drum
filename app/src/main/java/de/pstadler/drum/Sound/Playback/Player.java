@@ -2,11 +2,12 @@ package de.pstadler.drum.Sound.Playback;
 
 import android.media.MediaPlayer;
 import java.io.IOException;
+import de.pstadler.drum.Track.TrackFragment;
 
 
 public class Player extends MediaPlayer implements IClock
 {
-	private PlaybackEngine playbackEngine;
+	private static final int buttonCount = TrackFragment.NUMBER_OF_BUTTONS;
 	private boolean readyForPlayback = false;
 	private PlaybackArray playbackArray;
 
@@ -35,7 +36,7 @@ public class Player extends MediaPlayer implements IClock
 	@Override
 	public void onClockUpdate(int barId, int stepId)
 	{
-		if(readyForPlayback && playbackArray.getPlaybackArray()[(barId * 8) + stepId])		// TODO: replace 8 with track button count constant
+		if(readyForPlayback && playbackArray.getPlaybackArray()[(barId * buttonCount) + stepId])
 		{
 			/* If the player is already playing, seek to second 0 to start the sound again */
 			if(isPlaying()) {

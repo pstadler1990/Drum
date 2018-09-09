@@ -89,7 +89,7 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 
 					/* Show dialog to confirm the download of the selected soundkit */
 					AlertDialog dialog = new AlertDialog.Builder(getContext())
-							.setPositiveButton("Download kit", new DialogInterface.OnClickListener()
+							.setPositiveButton(getString(R.string.dialog_kit_download), new DialogInterface.OnClickListener()
 							{
 								@Override
 								public void onClick(DialogInterface dialog, int which)
@@ -103,7 +103,7 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 									}
 								}
 							})
-							.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+							.setNegativeButton(getString(R.string.action_cancel), new DialogInterface.OnClickListener()
 							{
 								@Override
 								public void onClick(DialogInterface dialog, int which)
@@ -111,7 +111,7 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 									dialog.cancel();
 								}
 							})
-							.setTitle("Download soundkit?")
+							.setTitle(getString(R.string.dialog_kit_download_q))
 							.setMessage(soundkit.name)
 							.create();
 
@@ -128,7 +128,7 @@ public class SoundkitsDownloadFragment extends Fragment implements IDownloadList
 	{
 		/* Show indicator */
 		progressDialog = new ProgressDialog(getContext());
-		progressDialog.setMessage("Downloading files...");
+		progressDialog.setMessage(getString(R.string.action_downloading));
 		progressDialog.show();
 	}
 

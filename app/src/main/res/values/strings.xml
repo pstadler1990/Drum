@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">Drum</string>
     <string name="action_cancel">Cancel</string>
+    <string name="action_downloading">"Downloading files..."</string>
     <string name="main_bpm">BPM</string>
+    <string name="track_empty">empty</string>
     <string name="mainmenu_button_new_track">Start a new project</string>
     <string name="mainmenu_button_load_track">Load a project</string>
     <string name="mainmenu_button_manage_kits">Manage sound kits</string>
@@ -22,6 +24,11 @@
     <string name="dialog_song_save_submit">Save</string>
     <string name="toast_song_saved_ok">Project successfully saved</string>
     <string name="toast_song_saved_fail">Sorry, there was an error while saving the project..</string>
+
+    <string name="dialog_kit_delete">Delete kit</string>
+    <string name="dialog_kit_delete_q">Delete soundkit?</string>
+    <string name="dialog_kit_download">"Download kit"</string>
+    <string name="dialog_kit_download_q">"Download soundkit?"</string>
 
     <string name="list_empty">No items yet</string>
 

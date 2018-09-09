@@ -3,7 +3,6 @@ package de.pstadler.drum.Database;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
-
 import de.pstadler.drum.Database.Converter.SongPlaybackConverter;
 import de.pstadler.drum.Database.Converter.SongSoundConverter;
 

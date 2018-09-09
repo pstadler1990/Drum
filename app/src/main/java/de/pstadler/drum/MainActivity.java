@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		IPlaybackControl, IDBHandler
 {
 	public static final int TRACKS_MAX = 8;
-	public static final int PAGES_MAX = 10;	// TODO: Add limit to page create function!
     public static int pages = 0;
     private boolean loopPlayback = false;
     private boolean isPlaying = false;
@@ -156,6 +155,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return tracksCreated;
     }
 
+    /* This method gets called if the user loads a project and all BarFragments are created
+       => creates all tracks and synchronizes them */
     private int createTracksFromLoadedProject(Sound[] sounds, int barId)
 	{
 		if(sounds == null || sounds.length == 0) return 0;
@@ -266,16 +267,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		}
 	}
 
-    @Override
-    public void onBackPressed() {
-        if (viewPager.getCurrentItem() == 0) {
-            super.onBackPressed();
-        }
-        else {
-            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
-        }
-    }
-
+	/* This callback gets called from a BarFragment if the MainActivity has been called through
+	   the LoadProjectActivity (= load a project) and if a newly created BarFragment is ready
+	   (= attached and view created)
+	   This is required, as otherwise the fragments won't be attached which will result in a crash */
     public void barFragmentIsReady(BarFragment barFragment, int barCounter)
 	{
 		if(!loadProject) return;
@@ -468,7 +463,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 				mainBarNumber.setText("0");
 			}
 		});
-
 	}
 
 	@Override
@@ -590,6 +584,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 				});
 
 				break;
+		}
+	}
+
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
+
+		if(playbackEngine != null) {
+			playbackEngine.stopPlayback();
 		}
 	}
 

@@ -8,6 +8,8 @@ import de.pstadler.drum.Track.TrackFragment;
 
 public class PlaybackConverter
 {
+	private static final int buttonCount = TrackFragment.NUMBER_OF_BUTTONS;
+
 	/* Convert a bar (fragment) to a list of PlaybackArrays
 	   Each PlaybackArray contains the true/false (on/off) values for a single bar*/
 	public static PlaybackArray[] convertBarToArray(BarFragment bar)
@@ -30,7 +32,7 @@ public class PlaybackConverter
 	{
 		int trackCount = list.get(0).length;
 		int pageCount = list.size();
-		int arrayLengthPerTrack = pageCount * 8;				// TODO: replace 8 with TRACK_BUTTONS_MAX constant
+		int arrayLengthPerTrack = pageCount * buttonCount;
 
 		PlaybackArray[] playbackArrays = new PlaybackArray[trackCount];
 
@@ -62,7 +64,6 @@ public class PlaybackConverter
 
 				System.arraycopy(tmpArray[j], 0, playbackArrays[j].playbackArray, 0, arrayLengthPerTrack);
 			}
-
 		}
 
 		return playbackArrays;
