@@ -6,32 +6,27 @@
     tools:context=".Sound.SoundkitsDownloadFragment"
     android:orientation="vertical">
 
-    <LinearLayout
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/soundkits_available_kits"
+        android:textSize="@dimen/text_size_large"
+        android:textStyle="bold"
+        android:padding="20dp"/>
+
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:id="@+id/soundkits_list_kits">
+    </ListView>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/soundkits_available_kits"
-            android:padding="20dp"/>
-
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/soundkits_list_kits">
-        </ListView>
-
-        <TextView
-            android:id="@+id/empty_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/list_empty"
-            android:visibility="gone"
-            android:paddingLeft="@dimen/padding_list"
-            android:textSize="@dimen/text_size_large" />
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/empty_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/list_empty"
+        android:visibility="gone"
+        android:paddingLeft="@dimen/padding_list"
+        android:textSize="@dimen/text_size_large" />
 
 </LinearLayout>

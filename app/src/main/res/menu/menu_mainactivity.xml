@@ -21,7 +21,7 @@
             android:checkable="true"
             android:icon="@drawable/ic_loop_24dp"
             android:title="@string/menu_loop"
-            app:showAsAction="ifRoom|withText" />
+            app:showAsAction="always|withText" />
     </group>
 
     <group android:id="@+id/menu_main_group_save">

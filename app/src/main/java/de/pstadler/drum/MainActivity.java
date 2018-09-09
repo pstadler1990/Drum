@@ -32,6 +32,8 @@ import de.pstadler.drum.Sound.Playback.PlaybackEngine;
 import de.pstadler.drum.Sound.Playback.Player;
 import de.pstadler.drum.Track.BarFragment;
 import de.pstadler.drum.Track.TrackFragment;
+
+import static de.pstadler.drum.Database.DB.MESSAGE_TYPE_INSERT_SONG_OK;
 import static de.pstadler.drum.Database.DB.MESSAGE_TYPE_UPDATE_SONG_OK;
 
 
@@ -44,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean isPlaying = false;
     private boolean loadProject = false;
     private int loadProjectCreated = 0;
-    private int bpm = 80;
+    private int bpm = 140;
     private Song currentSong;
     private ViewPager viewPager;
     private ScreenSlidePageAdapter pagerAdapter;
@@ -106,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 			createNewPage();
 		}
 
+		/* Set default BPM text */
 		mainBPM.setText(String.valueOf(bpm));
     }
 
@@ -114,6 +117,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	{
 		MenuInflater menuInflater = getMenuInflater();
 		menuInflater.inflate(R.menu.menu_mainactivity, menu);
+
+		/* Set loop menu item to not checked and white (only for tablets!) */
+		MenuItem menuItemLoop = menu.findItem(R.id.menu_main_loop_enable);
+		menuItemLoop.setChecked(false);
+		menuItemLoop.setIcon(R.drawable.ic_loop_off_24dp);
+
 		return true;
 	}
 
@@ -387,12 +396,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 				}
 				break;
 			case R.id.menu_main_loop_enable:
-				if(item.isChecked()) {
+				if(item.isChecked())
+				{
 					loopPlayback = false;
 					item.setChecked(false);
-				} else {
+					item.setIcon(R.drawable.ic_loop_off_24dp);
+				}
+				else
+				{
 					loopPlayback = true;
 					item.setChecked(true);
+					item.setIcon(R.drawable.ic_loop_24dp);
 				}
 				break;
 			case R.id.menu_main_save_track:
@@ -572,8 +586,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		switch (message.what)
 		{
 			case MESSAGE_TYPE_UPDATE_SONG_OK:
-				((App)getApplicationContext()).getDatabase().getSongs(this);
-
+			case MESSAGE_TYPE_INSERT_SONG_OK:
 				runOnUiThread(new Runnable()
 				{
 					@Override

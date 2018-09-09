@@ -5,27 +5,26 @@
     android:layout_height="match_parent"
     tools:context=".Track.TrackFragment"
     android:orientation="horizontal"
-    android:weightSum="1">
+    android:weightSum="1.05">
 
     <!-- Instrument -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight=".2"
+        android:layout_weight=".25"
         android:orientation="vertical"
         android:id="@+id/track_instrument_container"
         android:background="@drawable/button_beat">
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:id="@+id/instrument_name"
-            android:padding="@dimen/padding_default"
-            android:textColor="@color/colorButtonDefaultDark"
-            android:textSize="@dimen/text_size_large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:maxLines="1"
             android:maxWidth="@dimen/track_button_width"
-            android:layout_gravity="center_horizontal|center_vertical"/>
+            android:padding="@dimen/padding_default"
+            android:textColor="@color/colorButtonDefaultDark"
+            android:textSize="@dimen/text_size_default" />
 
     </LinearLayout>
 

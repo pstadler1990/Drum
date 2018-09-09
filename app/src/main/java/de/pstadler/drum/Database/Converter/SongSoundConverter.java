@@ -12,6 +12,8 @@ public class SongSoundConverter
 		String[] fields = soundString.split(",");
 		if(fields.length == 0) return null;
 
+		/* String format is: <sound name>,<kit name>,<path>, ...
+		   => Divide it by 3 */
 		int soundCount = fields.length / 3;
 		Sound[] sounds = new Sound[soundCount];
 		for(int i=0, j=0; i<fields.length; i+=3)
